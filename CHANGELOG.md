@@ -5,6 +5,21 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses semantic versioning for npm releases.
 
+## [0.1.1] - 2026-05-22
+
+### Added
+
+- Added a conditional external calibration step for market, product, adoption,
+  and current-practice questions, with privacy-safe search boundaries.
+
+### Changed
+
+- Changed the Codex structured-choice fallback so missing `request_user_input`
+  now emits fixed Markdown A/B/C options instead of asking users to change
+  collaboration modes.
+- Documented the Codex `default_mode_request_user_input` config and a copyable
+  prompt for enabling Default-mode choice popups.
+
 ## [0.1.0] - 2026-05-22
 
 ### Added
