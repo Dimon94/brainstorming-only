@@ -50,3 +50,37 @@ test("skill requires Codex native choice UI instead of Markdown fallback", () =>
   assert.match(protocol, /do not emit\s+the fallback A\/B\/C decision block/);
   assert.match(protocol, /prevents plain Markdown\s+choices from masquerading as Codex option UI/);
 });
+
+test("skill keeps external calibration conditional, private, and premise-focused", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+
+  const targetedQuestions = "3. **Ask targeted questions**";
+  const externalCalibration = "4. **External calibration**";
+  const premiseChallenge = "5. **Challenge the premises**";
+
+  assert.ok(skill.includes(externalCalibration));
+  assert.ok(
+    skill.indexOf(targetedQuestions) < skill.indexOf(externalCalibration),
+    "external calibration must happen after internal framing and targeted questions"
+  );
+  assert.ok(
+    skill.indexOf(externalCalibration) < skill.indexOf(premiseChallenge),
+    "external calibration must feed premise challenge before options and convergence"
+  );
+
+  assert.match(skill, /Trigger only when/);
+  assert.match(skill, /product, market, adoption/);
+  assert.match(skill, /current best practices/);
+  assert.match(skill, /competitors, substitutes, or incumbent workflows/);
+  assert.match(skill, /Show the generalized search terms/);
+  assert.match(skill, /Do not search for project names, company names, proprietary concepts, customer names, or sensitive details/);
+  assert.match(skill, /2-3 high-signal sources/);
+  assert.match(skill, /common wisdom/);
+  assert.match(skill, /current discourse/);
+  assert.match(skill, /implication for our premises/);
+  assert.match(skill, /must not be the final judge/);
+  assert.match(skill, /do not turn this into a competitive-research report, design document, implementation plan, or final-ranking mechanism/);
+
+  assert.doesNotMatch(skill, /always search the web for every brainstorming session/i);
+  assert.doesNotMatch(skill, /write a design document after external calibration/i);
+});
