@@ -201,9 +201,22 @@ Use these pressure tests when they fit:
    - Do not ask questions whose answer can be inferred from the user's request or local evidence.
    - If a question can be answered by inspecting local files or docs, inspect the narrow evidence instead of asking.
    - Smart-skip questions already answered by the user's prompt.
-   - If the user is impatient, ask at most two critical remaining questions, then move to premise challenge and options.
+   - If the user is impatient, ask at most two critical remaining questions, then move to external calibration only if it is clearly needed; otherwise move to premise challenge and options.
 
-4. **Challenge the premises**
+4. **External calibration**
+   - Run this only after the user's goal, judgment criteria, and key constraints are clear enough that outside information can challenge a real premise.
+   - Trigger only when external reality can materially change the discussion: product, market, adoption, design or technical ecosystem, current best practices, competitors, substitutes, or incumbent workflows; a trend-sensitive recommendation; a user request for outside voices; or a clear risk that the conversation is relying on stale/common-world assumptions.
+   - Skip it for purely private taste calls, personal reflection, naming polish, or low-stakes choices where outside information would not change the decision.
+   - Before live search, pause for a privacy gate. Show the generalized search terms you would use and ask the user to confirm, edit, or skip. Use the Host-Native Choice Protocol when available.
+   - Do not search for project names, company names, proprietary concepts, customer names, or sensitive details. Generalize to the category, workflow, audience, or incumbent pattern.
+   - If the user skips search or search is unavailable, say so and continue with in-distribution knowledge only; do not pretend it is current research.
+   - Keep the pass lightweight: read 2-3 high-signal sources, favor primary or reputable sources when available, and keep links when live sources are used.
+   - Synthesize the result into three short parts: common wisdom, current discourse, and implication for our premises.
+   - External calibration feeds premise challenge only. It must not be the final judge, must not overrule the user's first-hand evidence by default, and must not choose the final recommendation by popularity.
+   - If external sources conflict with the user's evidence, name the conflict and ask which source of truth should carry more weight before converging.
+   - Keep the boundary strict: do not turn this into a competitive-research report, design document, implementation plan, or final-ranking mechanism.
+
+5. **Challenge the premises**
    - Ask whether this is the right problem or if a simpler framing exists.
    - Ask what happens if nothing changes.
    - Separate the user's desired solution from the underlying job, pain, or decision.
@@ -212,7 +225,7 @@ Use these pressure tests when they fit:
    - For technical ideas, separate the caller-facing contract from the internal mechanism.
    - State the strongest 2-4 premises before options when the direction depends on them.
 
-5. **Generate options**
+6. **Generate options**
    - Offer 2-3 distinct approaches, concepts, or directions.
    - Make the options meaningfully different, not cosmetic variants.
    - Lead with the recommended option when there is enough evidence to recommend one.
@@ -223,7 +236,7 @@ Use these pressure tests when they fit:
      - Creative/lateral: different framing or unexpected wedge.
    - For interface or workflow choices, compare the caller/user experience, what complexity is hidden, what becomes easy, and what becomes hard to misuse.
 
-6. **Stress-test the options**
+7. **Stress-test the options**
    - Check assumptions, failure modes, hidden complexity, audience fit, and constraints.
    - Use concrete scenarios and edge cases to expose vague or conflicting ideas.
    - Call out overloaded terms and propose one precise meaning before continuing.
@@ -231,7 +244,7 @@ Use these pressure tests when they fit:
    - Point out weak ideas plainly, but keep the tone constructive.
    - Remove ideas that do not serve the user's stated goal.
 
-7. **Converge**
+8. **Converge**
    - Do not converge directly from the user's preferred answer. First state the cold-water pass, then either revise the direction, ask a blocking question, or explain why the direction survives.
    - Summarize the strongest direction and the reason it wins.
    - Capture open questions separately from decisions.
