@@ -2,6 +2,11 @@
 
 [中文说明](README.zh-CN.md)
 
+[![npm version](https://img.shields.io/npm/v/brainstorming-only.svg)](https://www.npmjs.com/package/brainstorming-only)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Node.js >=16](https://img.shields.io/badge/node-%3E%3D16-339933.svg)](package.json)
+[![GitHub stars](https://img.shields.io/github/stars/Dimon94/brainstorming-only?style=social)](https://github.com/Dimon94/brainstorming-only/stargazers)
+
 Standalone AI agent skill for focused brainstorming without drifting into specs,
 plans, commits, scaffolding, or implementation.
 
@@ -21,32 +26,45 @@ For long sessions, it keeps a small local recovery journal under
 recover the latest first-hand decisions without writing into the project
 workspace.
 
-## Install
+## Quick Install
+
+Install both Codex and Claude skill copies with one command:
 
 ```bash
-npm install -g brainstorming-only
+npx --yes brainstorming-only --both
 ```
 
-By default, the package installs the same skill into both supported ecosystems:
+Codex-only:
+
+```bash
+npx --yes brainstorming-only --codex
+```
+
+Claude-only:
+
+```bash
+npx --yes brainstorming-only --claude
+```
+
+The installer writes to:
 
 ```bash
 ${CODEX_HOME:-~/.codex}/skills/brainstorming-only
 ${CLAUDE_HOME:-~/.claude}/skills/brainstorming-only
 ```
 
-You can also run the installer directly:
+Global install also works:
 
 ```bash
-npx brainstorming-only
+npm install -g brainstorming-only
+brainstorming-only --codex
 ```
 
-Install only one ecosystem when needed:
+Requirements:
 
-```bash
-npx brainstorming-only --codex
-npx brainstorming-only --claude
-npx brainstorming-only --both
-```
+- Node.js 16 or newer.
+- A host that supports local skill directories.
+- Write access to `~/.codex/skills` or `~/.claude/skills`.
 
 ## Use
 
@@ -73,6 +91,19 @@ checkpoint is written to:
 The companion `meta.json` tracks `checkpoint_count`, `last_checkpoint_at`,
 `qa_since_checkpoint`, `status`, and the `active` / `latest` recovery pointers.
 
+## What It Adds
+
+- Discussion-only brainstorming with a hard boundary before specs, plans,
+  scaffolds, commits, or PRs.
+- Three postures: general brainstorming, product diagnostic, and builder mode.
+- Adversarial clarity: the skill names weak assumptions, missing evidence, and
+  failure modes instead of cheaply agreeing.
+- Structured decision pauses that use the host's native choice UI when available.
+- Context recovery journal under `~/.brainstorming/`, with checkpoints every 10
+  effective question-answer pairs and immediately after key decisions.
+- Standalone project slug logic inspired by `office-hours`, without depending on
+  gstack runtime files, commands, telemetry, or caches.
+
 ## Modes
 
 - **General brainstorming** - clarify a fuzzy idea, compare directions, and
@@ -90,22 +121,62 @@ turn's tools. Current Codex exposes it in Plan mode by default; Default mode
 requires the `DefaultModeRequestUserInput` feature gate. For Claude Code, that
 means MCP elicitation unless the official host protocol changes. For gstack-style
 hosts, that means a real `AskUserQuestion` tool when available.
+
 The detailed host mapping lives in
 `brainstorming-only/references/user-choice-output-protocol.md`. Plain A/B/C text
 is fallback only and is not used for Codex decision pauses when the native tool
 is unavailable.
+
+## Privacy And Local Data
+
+The session journal is local-only. It writes under `~/.brainstorming/`, not the
+current project directory, and it is meant for recovery after context
+compression. The skill instructs agents not to record credentials, tokens,
+private keys, or sensitive personal data. If sensitive material appears during a
+conversation, the journal should capture only the decision-relevant constraint
+and redact the secret itself.
+
+No gstack telemetry, analytics, or runtime commands are required for this
+package.
+
+## Project Signals
+
+Current public repository signals as of 2026-05-22:
+
+- GitHub repository: [Dimon94/brainstorming-only](https://github.com/Dimon94/brainstorming-only)
+- Stars: 0
+- Watchers: 0
+- npm package: [brainstorming-only](https://www.npmjs.com/package/brainstorming-only)
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Dimon94/brainstorming-only&type=Date)](https://star-history.com/#Dimon94/brainstorming-only&Date)
+
+## Verify A Local Checkout
+
+```bash
+npm test
+npm run pack:check
+node scripts/install.js --codex
+```
 
 If you later want implementation or planning, treat that as a separate request
 after the brainstorming session ends.
 
 ## What's Included
 
-- `brainstorming-only/SKILL.md` - the skill instructions
-- `brainstorming-only/references/user-choice-output-protocol.md` - host-specific structured choice protocol
-- `brainstorming-only/scripts/journal.js` - local session journal helper
-- `brainstorming-only/agents/openai.yaml` - optional UI metadata for compatible skill lists
+- `brainstorming-only/SKILL.md` - the skill instructions.
+- `brainstorming-only/references/user-choice-output-protocol.md` - host-specific structured choice protocol.
+- `brainstorming-only/scripts/journal.js` - local session journal helper.
+- `brainstorming-only/agents/openai.yaml` - optional UI metadata for compatible skill lists.
 - `scripts/install.js` - npm installer that copies the skill into `CODEX_HOME`
-  and `CLAUDE_HOME`
+  and `CLAUDE_HOME`.
+
+## Documentation
+
+- [Architecture](ARCHITECTURE.md)
+- [Changelog](CHANGELOG.md)
+- [Contributing](CONTRIBUTING.md)
+- [Security](SECURITY.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ## License
 

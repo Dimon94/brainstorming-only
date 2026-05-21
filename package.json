@@ -12,6 +12,9 @@
     "url": "https://github.com/Dimon94/brainstorming-only/issues"
   },
   "homepage": "https://github.com/Dimon94/brainstorming-only#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "brainstorming-only": "scripts/install.js"
   },
@@ -26,6 +29,11 @@
     "scripts/install.js",
     "README.md",
     "README.zh-CN.md",
+    "ARCHITECTURE.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
     "LICENSE"
   ],
   "keywords": [
