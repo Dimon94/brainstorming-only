@@ -75,7 +75,13 @@ Do not invoke implementation, planning, design-doc, commit, PR, scaffold, or cod
 7. **Converge**
    - Summarize the strongest direction and the reason it wins.
    - Capture open questions separately from decisions.
-   - End with a compact brainstorming outcome, not an implementation plan.
+   - End with a compact brainstorming outcome only after no blocking choice remains.
+
+## Decision Pauses vs Outcomes
+
+Structured choice pauses outrank convergence. If a real user decision is pending, use **Host-Native Choice Protocol** and stop; do not include `Brainstorming outcome` in the same turn.
+
+Use `Brainstorming outcome` only for terminal convergence after the user has answered the necessary choice, no blocking choice remains, or the user explicitly asks for a summary. A choice pause is not an outcome.
 
 ## Core Brainstorming Moves
 
@@ -130,6 +136,8 @@ When the topic is a technical direction, API, module, workflow, or architecture 
 ## Host-Native Choice Protocol
 
 When the workflow reaches a real user decision, prefer host-native structured choice UI over prose. Use it for posture selection, premise approval, approach selection, scope trade-offs, and any choice that changes the discussion direction. Do not use it for every lightweight clarification.
+
+This protocol takes precedence over **Converge** and **Output Shape**. After asking a structured choice, stop and wait for the user's answer.
 
 Before asking a structured choice, read `references/user-choice-output-protocol.md` and follow the host-specific format:
 
@@ -193,7 +201,7 @@ Scale the response to the user's need:
 - For naming, messaging, or content, give candidate sets and explain the selection criteria.
 - For strategy, give decision frames, sequencing logic, and key bets.
 
-When useful, close with:
+At terminal convergence, close with:
 
 ```markdown
 Brainstorming outcome:

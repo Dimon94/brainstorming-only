@@ -7,6 +7,7 @@ Use for posture selection, premise approval, approach selection, scope trade-off
 ## Contents
 
 - Decision Brief
+- Choice Pause Precedence
 - Strict Self-Check
 - Pros / Cons Quality Bar
 - Codex Host Format
@@ -26,6 +27,12 @@ Prepare this brief before choosing the host output format:
 - For each option: label, upside, cost/risk, and when it fits.
 - Completeness note when options differ by coverage, or "options differ in kind" when coverage is not comparable.
 - Net impact: what the selected option changes downstream.
+
+## Choice Pause Precedence
+
+A structured choice is a pause, not a final brainstorming outcome. If the session needs the user to choose A/B/C before the next reasoning step is valid, the choice protocol wins over any summary, convergence, or `Brainstorming outcome` instruction.
+
+After using a native choice tool, MCP elicitation, gstack `AskUserQuestion`, or fallback A/B/C text, stop immediately and wait. Do not append a decision summary, recommendation recap, or `Brainstorming outcome` in the same turn.
 
 ## Strict Self-Check
 
