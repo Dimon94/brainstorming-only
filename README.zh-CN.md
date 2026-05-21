@@ -60,7 +60,7 @@ Use $brainstorming-only to compare these product directions and help me choose o
 
 ## 结构化选项
 
-当宿主支持原生选择 UI 时，这个 skill 会优先使用原生选择，而不是普通 prose。对 Codex 来说，就是在可用时使用 `request_user_input`；对 Claude Code 来说，就是使用 MCP elicitation，除非官方宿主协议发生变化；对 gstack 风格宿主来说，就是在可用时使用真实的 `AskUserQuestion` 工具。详细宿主映射放在 `brainstorming-only/references/user-choice-output-protocol.md`。普通 A/B/C 文本只作为 fallback。
+当宿主支持原生选择 UI 时，这个 skill 会优先使用原生选择，而不是普通 prose。对 Codex 来说，就是在当前 turn 的工具列表里有 `request_user_input` 时使用它；当前 Codex 默认在 Plan mode 暴露这个工具，Default mode 需要 `DefaultModeRequestUserInput` feature gate。对 Claude Code 来说，就是使用 MCP elicitation，除非官方宿主协议发生变化；对 gstack 风格宿主来说，就是在可用时使用真实的 `AskUserQuestion` 工具。详细宿主映射放在 `brainstorming-only/references/user-choice-output-protocol.md`。普通 A/B/C 文本只作为 fallback；Codex 缺少原生工具时不把它当作真正的决策暂停。
 
 它不会：
 

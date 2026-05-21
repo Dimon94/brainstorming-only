@@ -85,12 +85,15 @@ The companion `meta.json` tracks `checkpoint_count`, `last_checkpoint_at`,
 ## Structured Choices
 
 When the host supports a native choice UI, the skill uses it instead of prose.
-For Codex, that means `request_user_input` when available. For Claude Code, that
+For Codex, that means `request_user_input` when it is listed in the current
+turn's tools. Current Codex exposes it in Plan mode by default; Default mode
+requires the `DefaultModeRequestUserInput` feature gate. For Claude Code, that
 means MCP elicitation unless the official host protocol changes. For gstack-style
 hosts, that means a real `AskUserQuestion` tool when available.
 The detailed host mapping lives in
 `brainstorming-only/references/user-choice-output-protocol.md`. Plain A/B/C text
-is fallback only.
+is fallback only and is not used for Codex decision pauses when the native tool
+is unavailable.
 
 If you later want implementation or planning, treat that as a separate request
 after the brainstorming session ends.
