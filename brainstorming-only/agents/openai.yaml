@@ -1,0 +1,4 @@
+interface:
+  display_name: "Brainstorming-Only"
+  short_description: "Explore ideas without starting downstream work"
+  default_prompt: "Use $brainstorming-only to compare these options and help me choose a direction."
