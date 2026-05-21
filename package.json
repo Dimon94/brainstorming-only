@@ -18,6 +18,7 @@
   "scripts": {
     "install-skill": "node scripts/install.js",
     "postinstall": "node scripts/install.js --silent",
+    "test": "node --test",
     "pack:check": "npm pack --dry-run"
   },
   "files": [
