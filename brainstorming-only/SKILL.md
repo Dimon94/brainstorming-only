@@ -134,7 +134,7 @@ When the workflow reaches a real user decision, prefer host-native structured ch
 Before asking a structured choice, read `references/user-choice-output-protocol.md` and follow the host-specific format:
 
 - Codex: use `request_user_input` when available.
-- Claude Code: use MCP elicitation or another real structured-input tool when available.
+- Claude Code: use MCP elicitation as the required structured-input path unless the official host protocol changes.
 - gstack-style hosts: use the real `AskUserQuestion` tool when available.
 - Fallback: use the fixed A/B/C text block from the reference and stop.
 
@@ -162,12 +162,7 @@ Question bank, asked one at a time and smart-skipped:
 5. **Observation:** Have you watched someone try this without helping them, and what surprised you?
 6. **Future-fit:** If the world changes in three years, does this become more or less necessary?
 
-Routing:
-
-- Pre-product: favor demand reality, status quo, and specific human.
-- Has users: favor status quo, narrowest wedge, and observation.
-- Has paying customers or committed sponsors: favor narrowest wedge, observation, and future-fit.
-- Pure workflow or engineering tool: favor status quo and narrowest wedge.
+Stage routing is defined once in **Mode Routing**. Do not maintain a second Product Diagnostic routing table here.
 
 ## Builder Mode Posture
 

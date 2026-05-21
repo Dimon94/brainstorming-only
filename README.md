@@ -68,8 +68,8 @@ into another workflow.
 
 When the host supports a native choice UI, the skill uses it instead of prose.
 For Codex, that means `request_user_input` when available. For Claude Code, that
-means MCP elicitation or another real structured-input tool when available. For
-gstack-style hosts, that means a real `AskUserQuestion` tool when available.
+means MCP elicitation unless the official host protocol changes. For gstack-style
+hosts, that means a real `AskUserQuestion` tool when available.
 The detailed host mapping lives in
 `brainstorming-only/references/user-choice-output-protocol.md`. Plain A/B/C text
 is fallback only.

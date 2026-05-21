@@ -10,7 +10,7 @@ Use for posture selection, premise approval, approach selection, scope trade-off
 - Strict Self-Check
 - Pros / Cons Quality Bar
 - Codex Host Format
-- Claude Code Structured Input
+- Claude Code MCP Elicitation
 - gstack AskUserQuestion Format
 - Fallback Text
 
@@ -117,9 +117,9 @@ Mapping:
 - `options[].label`: 1-5 words, with `(Recommended)` only on the first option.
 - `options[].description`: one sentence with upside and cost/risk. Include completeness only if it changes the decision.
 
-## Claude Code Structured Input
+## Claude Code MCP Elicitation
 
-When Claude Code exposes MCP elicitation or another real structured-input tool, use it instead of prose.
+When the host is Claude Code, use MCP elicitation as the required structured-input path unless the official Claude Code / MCP protocol changes. Do not downgrade Claude Code to prose or generic structured input just because other hosts use different choice mechanisms.
 
 Minimum shape:
 
@@ -128,7 +128,7 @@ Minimum shape:
 - Option labels contain the short label and recommended marker.
 - Field or option descriptions contain the recommendation, upside, and cost/risk.
 
-If no such structured-input tool is available, use the fallback text block. Do not claim Claude Code has a generic native `AskUserQuestion` tool unless the host actually exposes one.
+If a Claude Code runtime claims to support skills but does not expose MCP elicitation to the current agent, state the missing host capability explicitly before using the fallback text block. Do not simulate MCP elicitation with Markdown, XML, comments, or a fake tool call.
 
 ## gstack AskUserQuestion Format
 
