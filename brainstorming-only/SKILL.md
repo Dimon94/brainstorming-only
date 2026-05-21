@@ -19,6 +19,137 @@ The skill can run in three postures:
 Do not invoke implementation, planning, design-doc, commit, PR, scaffold, or code-editing workflows from this skill. Do not transition to `writing-plans` or any other follow-up skill. If the user later asks for implementation or planning, treat that as a separate request after this brainstorming session ends.
 </HARD-GATE>
 
+## Session Journal
+
+Long brainstorming conversations can overflow the model context window. Keep a
+small local session journal so later context compression can recover the user's
+first-hand decisions, constraints, and quoted evidence without polluting the
+workspace.
+
+The journal is allowed by this skill because it writes only under
+`~/.brainstorming/`, not inside the user's project. Do not record credentials,
+tokens, private keys, or sensitive personal data. If such material appears,
+redact it and record only the decision-relevant constraint.
+
+### Journal Location
+
+Reuse the `office-hours` project slug logic. Do not invent a separate project
+identity for this skill, and do not depend on a gstack runtime. The helper
+implements the same slug shape locally: explicit override, local
+`~/.brainstorming/slug-cache`, git remote `owner-repo`, then cwd basename.
+
+```bash
+node "$_JOURNAL_SCRIPT" state --cwd "$PWD"
+```
+
+Journal files live at:
+
+```text
+~/.brainstorming/projects/<project-slug>/
+  sessions/
+    YYYYMMDD-HHMMSS-<topic-slug>/
+      brainstorming.md
+      meta.json
+  active -> sessions/<current-session>
+  latest -> sessions/<most-recent-session>
+```
+
+`active` points to the current open session. `latest` points to the most recent
+session whether it is active or closed. When a session closes, remove `active`
+and keep `latest`.
+
+### Journal Helper
+
+Use `scripts/journal.js` relative to this `SKILL.md`. If the host cannot resolve
+the current skill directory directly, try these common install locations:
+
+```bash
+_JOURNAL_SCRIPT="$HOME/.codex/skills/brainstorming-only/scripts/journal.js"
+[ ! -f "$_JOURNAL_SCRIPT" ] && [ -f "$HOME/.claude/skills/brainstorming-only/scripts/journal.js" ] && _JOURNAL_SCRIPT="$HOME/.claude/skills/brainstorming-only/scripts/journal.js"
+```
+
+Start or recover the session before the first substantial brainstorming answer:
+
+```bash
+_BRANCH=$(git branch --show-current 2>/dev/null || echo unknown)
+node "$_JOURNAL_SCRIPT" state --cwd "$PWD"
+# If active exists, read its meta.json and the latest checkpoint in brainstorming.md.
+# If no active exists and this is a new topic, start a new session:
+node "$_JOURNAL_SCRIPT" start --topic "<short-topic>" --cwd "$PWD" --branch "$_BRANCH"
+```
+
+Keep the returned `dir` as the current session path.
+
+### Checkpoint Rules
+
+An effective question-answer pair means the assistant asked a decision-relevant
+question and the user answered with information that changes or confirms the
+direction. Do not count greetings, acknowledgements, or purely mechanical turns.
+
+After each effective question-answer pair:
+
+```bash
+node "$_JOURNAL_SCRIPT" record-qa --session "<session-dir>"
+```
+
+If the output says `"checkpoint_due": true`, immediately write a checkpoint and
+reset the counter:
+
+```bash
+node "$_JOURNAL_SCRIPT" checkpoint \
+  --session "<session-dir>" \
+  --reason qa-threshold \
+  --quote "<1-3 short user quotes>" \
+  --decision "<decision or confirmed direction>" \
+  --open-question "<remaining unknown>" \
+  --context "<future planning context>"
+```
+
+Also write a checkpoint immediately, without waiting for 10 pairs, when any of
+these happen:
+
+- The user chooses a recommended direction.
+- The user explicitly rejects an important option.
+- The user changes storage location, naming, trigger rules, or boundaries.
+- The user corrects the assistant's assumption.
+- The user gives a fact, quote, constraint, or background detail that later
+  planning must preserve.
+- The session is about to end or transition into a separate planning or
+  implementation request.
+
+Each checkpoint should preserve:
+
+- `1-3` short user quotes as evidence.
+- Decisions made since the previous checkpoint.
+- Rejected options and why they were rejected.
+- Open questions.
+- Context future planning must retain.
+
+When the brainstorming session ends:
+
+```bash
+node "$_JOURNAL_SCRIPT" close --session "<session-dir>" --summary "<final summary>"
+```
+
+This sets `meta.json.status` to `closed`, writes `closed_at` and
+`final_summary`, removes `active`, and leaves `latest` for recovery.
+
+## Adversarial Clarity
+
+No cheap praise. The skill should help the user think, not make a weak idea look finished.
+When the user proposes a direction, name hidden assumptions, missing evidence,
+and failure modes before converging.
+
+Use these pressure tests when they fit:
+
+- Ask "What would make this collapse?" before treating a direction as durable.
+- Run a short pre-mortem for important product, workflow, or architecture
+  choices.
+- Separate the strongest version of the idea from the version currently stated.
+- Challenge pleasant but unsupported claims with concrete evidence requests.
+- If an option only sounds good because a hard part is unnamed, name that hard
+  part directly.
+
 ## Workflow
 
 1. **Frame the topic**
@@ -211,6 +342,9 @@ Brainstorming outcome:
 - Open questions:
 ```
 
+After terminal convergence, write a final checkpoint or close the journal before
+ending the skill response.
+
 ## Boundaries
 
 This skill may:
@@ -222,7 +356,7 @@ This skill may:
 
 This skill must not:
 
-- Write or modify project files unless the user explicitly asks for a brainstorming artifact file.
+- Write or modify project files unless the user explicitly asks for a brainstorming artifact file. The `~/.brainstorming/` session journal is allowed because it is outside the project workspace.
 - Create specs under `docs/`, commit files, open PRs, or update roadmaps.
 - Invoke `writing-plans`, implementation skills, design-production skills, or release workflows.
 - Start a dev server, scaffold a project, install dependencies, or run broad test suites.

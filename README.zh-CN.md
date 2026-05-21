@@ -4,7 +4,9 @@
 
 `Brainstorming-Only` 是一个独立的 AI agent skill，用来做纯讨论型头脑风暴：澄清目标、比较选项、分析取舍、收敛决策，但不会进入规格文档、实施计划、脚手架、代码修改、提交或 PR。
 
-这个项目是单 SKILL 开源包。它致敬原始的 `$brainstorming` skill：保留协作式澄清、方案生成和取舍分析的核心精神，同时刻意切断后续执行链路，让它只服务于“想清楚”，不自动滑向“开始做”。它也吸收了 `office-hours` 风格的产品诊断能力，但不依赖 gstack 的运行时、遥测、设计文档、提交或 PR 流程。
+这个项目是单 SKILL 开源包。它致敬原始的 `$brainstorming` skill：保留协作式澄清、方案生成和取舍分析的核心精神，同时刻意切断后续执行链路，让它只服务于“想清楚”，不自动滑向“开始做”。它也吸收了 `office-hours` 风格的产品诊断能力，但不依赖 gstack 运行时、遥测、设计文档、提交或 PR 流程。
+
+长对话时，它会把少量恢复记录写到 `~/.brainstorming/`。这个记录使用和 `office-hours` 一样的 project slug 形状，但不依赖 gstack 运行时；上下文压缩后，可以从这个固定位置找回用户的一手决策、约束和原话证据，同时不会污染项目工作区。
 
 ## 安装
 
@@ -72,10 +74,32 @@ Use $brainstorming-only to compare these product directions and help me choose o
 
 如果头脑风暴结束后你想继续做计划或实现，请把那当作一个新的请求，而不是这个 skill 的自动下一步。
 
+## Session Journal
+
+长时间多轮沟通时，skill 会在以下时机写入 checkpoint：
+
+- 每 10 个有效问答对
+- 用户做出关键选择
+- 用户否定重要方向
+- 用户纠正 agent 假设
+- 用户补充后续计划必须保留的事实、约束或原话
+- session 结束或准备切换到计划/实现请求前
+
+记录位置：
+
+```text
+~/.brainstorming/projects/<project-slug>/sessions/<timestamp>-<topic-slug>/brainstorming.md
+```
+
+同目录下的 `meta.json` 会记录 `checkpoint_count`、`last_checkpoint_at`、
+`qa_since_checkpoint`、`status` 等恢复字段。项目目录里还会维护两个指针：
+`active` 指向当前打开的 session，`latest` 指向最近一个 session。
+
 ## 包含内容
 
 - `brainstorming-only/SKILL.md` - skill 主说明
 - `brainstorming-only/references/user-choice-output-protocol.md` - 宿主结构化选项协议
+- `brainstorming-only/scripts/journal.js` - 本地 session journal 辅助脚本
 - `brainstorming-only/agents/openai.yaml` - 兼容 skill 列表可读取的可选 UI 元数据
 - `scripts/install.js` - npm 安装脚本，会复制 skill 到 `CODEX_HOME`
   和 `CLAUDE_HOME`

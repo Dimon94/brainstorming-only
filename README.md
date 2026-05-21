@@ -12,7 +12,14 @@ the original `$brainstorming` skill: it keeps the collaborative clarification,
 option generation, and trade-off analysis, while deliberately stopping before
 any downstream workflow begins. It also adds an office-hours-inspired product
 diagnostic posture for sharper "is this worth building?" conversations, while
-staying independent from gstack runtimes, telemetry, design docs, and commits.
+staying independent from gstack telemetry, design docs, commits, and downstream
+workflow machinery.
+
+For long sessions, it keeps a small local recovery journal under
+`~/.brainstorming/`. The journal uses the same project slug shape as
+`office-hours` without depending on the gstack runtime, so compressed context can
+recover the latest first-hand decisions without writing into the project
+workspace.
 
 ## Install
 
@@ -55,6 +62,17 @@ trade-offs, and summarize the decision. It must not create specs, write
 implementation plans, scaffold files, commit changes, open PRs, or transition
 into another workflow.
 
+During longer conversations, the skill checkpoints the session after every 10
+effective question-answer pairs and immediately after key decisions. Each
+checkpoint is written to:
+
+```text
+~/.brainstorming/projects/<project-slug>/sessions/<timestamp>-<topic-slug>/brainstorming.md
+```
+
+The companion `meta.json` tracks `checkpoint_count`, `last_checkpoint_at`,
+`qa_since_checkpoint`, `status`, and the `active` / `latest` recovery pointers.
+
 ## Modes
 
 - **General brainstorming** - clarify a fuzzy idea, compare directions, and
@@ -81,6 +99,7 @@ after the brainstorming session ends.
 
 - `brainstorming-only/SKILL.md` - the skill instructions
 - `brainstorming-only/references/user-choice-output-protocol.md` - host-specific structured choice protocol
+- `brainstorming-only/scripts/journal.js` - local session journal helper
 - `brainstorming-only/agents/openai.yaml` - optional UI metadata for compatible skill lists
 - `scripts/install.js` - npm installer that copies the skill into `CODEX_HOME`
   and `CLAUDE_HOME`
