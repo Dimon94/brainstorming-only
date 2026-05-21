@@ -1,11 +1,17 @@
 ---
 name: brainstorming-only
-description: "Standalone brainstorming for shaping ideas, choices, product directions, workflows, designs, or technical approaches through collaborative discussion. Use when the user wants ideation, clarification, alternatives, trade-off analysis, or a decision summary without starting a spec, plan, commit, implementation, scaffold, code change, or downstream workflow."
+description: "Standalone brainstorming for shaping ideas, choices, product directions, workflows, designs, or technical approaches through collaborative discussion. Use when the user wants ideation, product diagnostics, builder-mode riffing, structured option selection, trade-off analysis, or a decision summary without starting a spec, plan, commit, implementation, scaffold, code change, or downstream workflow."
 ---
 
 # Brainstorming-Only
 
 Use this skill to help the user think clearly before any downstream work exists. The output is discussion, options, decisions, and a concise summary. It is intentionally decoupled from implementation, planning, spec writing, and commits.
+
+The skill can run in three postures:
+
+- **General brainstorming** - clarify, compare options, stress-test trade-offs.
+- **Product diagnostic** - use sharper product questions for startup, internal product, business, adoption, or "worth building?" ideas.
+- **Builder mode** - riff on side projects, learning projects, open source, hackathons, demos, and creative tools.
 
 <HARD-GATE>
 Do not invoke implementation, planning, design-doc, commit, PR, scaffold, or code-editing workflows from this skill. Do not transition to `writing-plans` or any other follow-up skill. If the user later asks for implementation or planning, treat that as a separate request after this brainstorming session ends.
@@ -18,25 +24,103 @@ Do not invoke implementation, planning, design-doc, commit, PR, scaffold, or cod
    - If the request is ambiguous, name the ambiguity directly.
    - If project context matters and is locally available, inspect only the minimum evidence needed to avoid guessing.
 
-2. **Ask targeted questions**
+2. **Choose the posture**
+   - Use Product Diagnostic when the user mentions customers, revenue, adoption, internal stakeholders, a startup, a company idea, or whether something is worth building.
+   - Use Builder Mode when the user is exploring a side project, hackathon, open source, learning, research, demo, toy, or creative tool.
+   - Use General Brainstorming for strategy, naming, technical direction, workflow shape, design direction, or ambiguous early thinking.
+   - If the posture choice would change the conversation and is not obvious, ask one structured choice question.
+
+3. **Ask targeted questions**
    - Ask one question at a time when the answer will materially change the direction.
    - Prefer multiple-choice questions when they reduce effort for the user.
    - Do not ask questions whose answer can be inferred from the user's request or local evidence.
+   - Smart-skip questions already answered by the user's prompt.
+   - If the user is impatient, ask at most two critical remaining questions, then move to premise challenge and options.
 
-3. **Generate options**
+4. **Challenge the premises**
+   - Ask whether this is the right problem or if a simpler framing exists.
+   - Ask what happens if nothing changes.
+   - For product ideas, separate interest from demand and named users from broad categories.
+   - For builder ideas, separate the fun core from polish, infrastructure, and premature optimization.
+   - State the strongest 2-4 premises before options when the direction depends on them.
+
+5. **Generate options**
    - Offer 2-3 distinct approaches, concepts, or directions.
    - Lead with the recommended option when there is enough evidence to recommend one.
    - For each option, state the main upside, trade-off, and when it fits.
+   - For non-trivial product or technical choices, include:
+     - Minimal viable: smallest useful version.
+     - Ideal long-term: best durable shape.
+     - Creative/lateral: different framing or unexpected wedge.
 
-4. **Stress-test the options**
+6. **Stress-test the options**
    - Check assumptions, failure modes, hidden complexity, audience fit, and constraints.
    - Point out weak ideas plainly, but keep the tone constructive.
    - Remove ideas that do not serve the user's stated goal.
 
-5. **Converge**
+7. **Converge**
    - Summarize the strongest direction and the reason it wins.
    - Capture open questions separately from decisions.
    - End with a compact brainstorming outcome, not an implementation plan.
+
+## Host-Native Choice Protocol
+
+When the workflow reaches a real user decision, prefer host-native structured choice UI over prose. Use it for posture selection, premise approval, approach selection, scope trade-offs, and any choice that changes the discussion direction. Do not use it for every lightweight clarification.
+
+Before asking a structured choice, read `references/user-choice-output-protocol.md` and follow the host-specific format:
+
+- Codex: use `request_user_input` when available.
+- Claude Code / gstack-style hosts: use the real `AskUserQuestion` tool when available.
+- Fallback: use the fixed A/B/C text block from the reference and stop.
+
+Never invent Markdown, XML, comments, or hidden markers and claim they are native selectors.
+
+## Product Diagnostic Posture
+
+Use this when the user is testing a product, company, internal project, adoption question, monetization question, or "is this worth building?" idea.
+
+Operating rules:
+
+- Be specific. Broad categories like "developers", "SMBs", or "teams" are not enough.
+- Treat behavior, money, repeated use, anger when it breaks, and workflow dependence as demand. Treat compliments and waitlists as weak evidence.
+- The current workaround is the real competitor.
+- Narrow early. The smallest valuable wedge is usually more useful than the platform vision.
+- Push once when the first answer is vague, then move on. This skill is still brainstorming-only, not interrogation-only.
+
+Question bank, asked one at a time and smart-skipped:
+
+1. **Demand reality:** What is the strongest evidence someone actually wants this, beyond interest or signups?
+2. **Status quo:** What do they do today to solve it, even badly, and what does that cost?
+3. **Specific human:** Who needs it most, what is their role, and what consequence are they avoiding?
+4. **Narrowest wedge:** What is the smallest version someone would pay for or politically sponsor soon?
+5. **Observation:** Have you watched someone try this without helping them, and what surprised you?
+6. **Future-fit:** If the world changes in three years, does this become more or less necessary?
+
+Routing:
+
+- Pre-product: favor demand reality, status quo, and specific human.
+- Has users: favor status quo, narrowest wedge, and observation.
+- Has paying customers or committed sponsors: favor narrowest wedge, observation, and future-fit.
+- Pure workflow or engineering tool: favor status quo and narrowest wedge.
+
+## Builder Mode Posture
+
+Use this when the user is exploring for fun, learning, open source, research, demos, side projects, or hackathons.
+
+Operating rules:
+
+- Delight matters. Find what would make someone say "whoa".
+- Shipability matters. Prefer a version the user can actually use or show.
+- If the user is building for themselves, trust that as useful evidence.
+- Explore the weird idea before optimizing it away.
+
+Question bank, asked one at a time and smart-skipped:
+
+1. What is the coolest version of this?
+2. Who would you show it to, and what would make them care?
+3. What is the fastest path to something usable or shareable?
+4. What existing thing is closest, and how is this different?
+5. What is the 10x version if time were unlimited?
 
 ## Output Shape
 
