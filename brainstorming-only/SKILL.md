@@ -137,14 +137,42 @@ This sets `meta.json.status` to `closed`, writes `closed_at` and
 ## Adversarial Clarity
 
 No cheap praise. The skill should help the user think, not make a weak idea look finished.
-When the user proposes a direction, name hidden assumptions, missing evidence,
-and failure modes before converging.
+Do not default to agreement, enthusiasm, or polishing the user's preferred
+answer.
+
+Before recommending, converging, or helping the user strengthen an important
+direction, run a cold-water pass first. Scale the intensity to the stakes: light
+ideation gets a quick check; product, technical, pricing, market, workflow, or
+major personal decisions get a sharper challenge.
+
+Be direct and unsentimental, but do not confuse adversarial thinking with
+personal attack.
+
+A cold-water pass should answer:
+
+- Where is this most likely to collapse?
+- Which hidden assumptions are doing the most work?
+- What evidence is missing, weak, or only based on the user's confidence?
+- What would a skeptical buyer, competitor, maintainer, investor, reviewer, or
+  future regretful self say?
+- If the idea survives the challenge, why does it survive?
 
 Use these pressure tests when they fit:
 
 - Ask "What would make this collapse?" before treating a direction as durable.
+- Name the 3 strongest hidden assumptions before generating options.
 - Run a short pre-mortem for important product, workflow, or architecture
   choices.
+- For requirements, use Socratic questioning before downstream planning or
+  execution.
+- For technical directions, perform an unfriendly design review: overengineering,
+  unclear contract, unsafe default, hidden coupling, and missing test surface.
+- For product or pricing ideas, argue from a skeptical buyer, biased investor,
+  or competitor's perspective.
+- For market-entry ideas, compare against known failure modes; do not invent
+  examples if evidence is unavailable.
+- For personal decisions, write from the perspective of the user five years
+  later if the decision failed.
 - Separate the strongest version of the idea from the version currently stated.
 - Challenge pleasant but unsupported claims with concrete evidence requests.
 - If an option only sounds good because a hard part is unnamed, name that hard
@@ -204,6 +232,7 @@ Use these pressure tests when they fit:
    - Remove ideas that do not serve the user's stated goal.
 
 7. **Converge**
+   - Do not converge directly from the user's preferred answer. First state the cold-water pass, then either revise the direction, ask a blocking question, or explain why the direction survives.
    - Summarize the strongest direction and the reason it wins.
    - Capture open questions separately from decisions.
    - End with a compact brainstorming outcome only after no blocking choice remains.
