@@ -4,6 +4,16 @@ Use this reference when a brainstorming session reaches a real user decision. Ho
 
 Use for posture selection, premise approval, approach selection, scope trade-offs, and any choice that changes the rest of the brainstorming session. Do not use for every lightweight clarification.
 
+## Contents
+
+- Decision Brief
+- Strict Self-Check
+- Pros / Cons Quality Bar
+- Codex Host Format
+- Claude Code Structured Input
+- gstack AskUserQuestion Format
+- Fallback Text
+
 ## Decision Brief
 
 Prepare this brief before choosing the host output format:
@@ -16,6 +26,50 @@ Prepare this brief before choosing the host output format:
 - For each option: label, upside, cost/risk, and when it fits.
 - Completeness note when options differ by coverage, or "options differ in kind" when coverage is not comparable.
 - Net impact: what the selected option changes downstream.
+
+## Strict Self-Check
+
+Before calling a structured choice tool or emitting fallback text, verify:
+
+- `D<N>` title exists and increments from the previous decision.
+- The question asks one decision, not multiple hidden decisions.
+- The options are mutually exclusive and cover the realistic paths.
+- The recommended option is first for Codex and marked `(Recommended)` or `(recommended)` everywhere else.
+- The recommendation has a concrete reason, not "best balance" without saying what is being balanced.
+- Stakes are explicit: what becomes worse if the user picks wrong.
+- Completeness is scored only when coverage differs; otherwise use the kind-note.
+- Pros/cons meet the quality bar below.
+- The response stops after asking and waits for the user's answer.
+
+If any item fails, rewrite the question before asking it.
+
+## Pros / Cons Quality Bar
+
+Each real option must include:
+
+- At least one concrete upside tied to the user's outcome.
+- At least one honest cost, risk, or lost alternative.
+- A "when it fits" condition unless the host format is too short.
+- Specific nouns from the current topic. Avoid empty words like "simple", "flexible", "robust", or "better" unless followed by what becomes simpler, flexible, or better.
+
+For rich hosts such as gstack AskUserQuestion, use at least two pros and one con per option when the decision is non-trivial. For compact Codex `request_user_input`, compress the strongest upside and cost/risk into the option description.
+
+Bad:
+
+```text
+A) Fast
+   Good: quick
+   Cost/Risk: less complete
+```
+
+Good:
+
+```text
+A) Minimal protocol fix (recommended)
+   Good: Fixes the false Claude Code AskUserQuestion contract without expanding runtime dependencies.
+   Cost/Risk: Leaves broader office-hours diagnostics for a separate iteration.
+   When it fits: Use when the goal is correcting host compatibility with the smallest durable edit.
+```
 
 ## Codex Host Format
 
@@ -63,9 +117,22 @@ Mapping:
 - `options[].label`: 1-5 words, with `(Recommended)` only on the first option.
 - `options[].description`: one sentence with upside and cost/risk. Include completeness only if it changes the decision.
 
-## Claude Code AskUserQuestion Format
+## Claude Code Structured Input
 
-When Claude Code or a gstack-style host exposes a real `AskUserQuestion` tool, send the decision brief as a tool call, not prose. Do not simulate this by writing Markdown.
+When Claude Code exposes MCP elicitation or another real structured-input tool, use it instead of prose.
+
+Minimum shape:
+
+- Single-select field with enum values `A`, `B`, and optional `C`.
+- Field prompt contains the one-sentence question and stakes.
+- Option labels contain the short label and recommended marker.
+- Field or option descriptions contain the recommendation, upside, and cost/risk.
+
+If no such structured-input tool is available, use the fallback text block. Do not claim Claude Code has a generic native `AskUserQuestion` tool unless the host actually exposes one.
+
+## gstack AskUserQuestion Format
+
+When a gstack-style host exposes a real `AskUserQuestion` tool, send the decision brief as a tool call, not prose. Do not simulate this by writing Markdown.
 
 Use this content shape inside the tool:
 
@@ -79,14 +146,20 @@ Completeness: A=X/10, B=Y/10
   OR: Note: options differ in kind, not coverage - no completeness score.
 Pros / cons:
 A) <option label> (recommended)
-  Good: <concrete upside>
-  Cost/Risk: <honest downside>
+  Good: <concrete upside, specific to the current topic>
+  Good: <second concrete upside for non-trivial decisions>
+  Cost/Risk: <honest downside or lost alternative>
+  When it fits: <condition where this option is right>
 B) <option label>
-  Good: <concrete upside>
-  Cost/Risk: <honest downside>
+  Good: <concrete upside, specific to the current topic>
+  Good: <second concrete upside for non-trivial decisions>
+  Cost/Risk: <honest downside or lost alternative>
+  When it fits: <condition where this option is right>
 C) <option label, optional>
-  Good: <concrete upside>
-  Cost/Risk: <honest downside>
+  Good: <concrete upside, specific to the current topic>
+  Good: <second concrete upside for non-trivial decisions>
+  Cost/Risk: <honest downside or lost alternative>
+  When it fits: <condition where this option is right>
 Net: <one-line synthesis of the trade-off>
 ```
 
@@ -98,7 +171,8 @@ Rules:
 4. Put `(recommended)` on exactly one option.
 5. Use completeness scores only when options differ by coverage; otherwise use the kind-note.
 6. Keep options mutually exclusive.
-7. Stop after the tool call and wait.
+7. Each option needs at least two pros and one con for non-trivial decisions; one-way hard-stop confirmations may state that no real alternative exists.
+8. Stop after the tool call and wait.
 
 ## Fallback Text
 

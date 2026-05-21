@@ -31,6 +31,7 @@ Do not invoke implementation, planning, design-doc, commit, PR, scaffold, or cod
    - Use Product Diagnostic when the user mentions customers, revenue, adoption, internal stakeholders, a startup, a company idea, or whether something is worth building.
    - Use Builder Mode when the user is exploring a side project, hackathon, open source, learning, research, demo, toy, or creative tool.
    - Use General Brainstorming for strategy, naming, technical direction, workflow shape, design direction, or ambiguous early thinking.
+   - If the session changes character, reroute explicitly: Builder Mode becomes Product Diagnostic when real users, payment, sponsors, or distribution risk appear; Product Diagnostic becomes General Brainstorming when the question is only about naming, structure, or technical shape.
    - If the posture choice would change the conversation and is not obvious, ask one structured choice question.
 
 3. **Ask targeted questions**
@@ -89,6 +90,31 @@ Use these moves selectively. Do not run every move mechanically.
 - **One-question prototype framing:** If the user wants to try something, identify the single question the prototype would answer, but do not build it in this skill.
 - **Evidence over interrogation:** If local context can answer a question cheaply, inspect it. Ask the user only for judgments, preferences, constraints, or missing facts.
 
+## Mode Routing
+
+Pick the posture by the decision the user is really making:
+
+| Signal | Mode | First pressure |
+| --- | --- | --- |
+| Customers, revenue, adoption, sponsor, market, startup, "worth building" | Product Diagnostic | Is there demand, or only interest? |
+| Side project, hackathon, open source, learning, research, demo, fun | Builder Mode | What is the coolest shareable version? |
+| Strategy, naming, technical direction, workflow, API, architecture, unclear idea | General Brainstorming | What decision is upstream of the details? |
+
+Product Diagnostic stage routing:
+
+- **Pre-product:** prioritize demand reality, status quo, and specific human.
+- **Has users:** prioritize status quo, narrowest wedge, and observation.
+- **Has paying customers or committed sponsors:** prioritize narrowest wedge, observation, and future-fit.
+- **Pure workflow or engineering tool:** prioritize status quo and narrowest wedge.
+- **Internal project:** translate "pay for it" into "sponsor, adopt, staff, or politically defend it".
+
+Builder Mode routing:
+
+- If the user wants delight, start with coolest version and who they would show.
+- If the user wants to ship fast, start with fastest usable/shareable path.
+- If the user wants differentiation, start with closest existing thing and how this differs.
+- If business stakes appear midstream, switch to Product Diagnostic and say why.
+
 ## Technical Brainstorming Lens
 
 When the topic is a technical direction, API, module, workflow, or architecture choice, stay at design level and evaluate:
@@ -108,7 +134,8 @@ When the workflow reaches a real user decision, prefer host-native structured ch
 Before asking a structured choice, read `references/user-choice-output-protocol.md` and follow the host-specific format:
 
 - Codex: use `request_user_input` when available.
-- Claude Code / gstack-style hosts: use the real `AskUserQuestion` tool when available.
+- Claude Code: use MCP elicitation or another real structured-input tool when available.
+- gstack-style hosts: use the real `AskUserQuestion` tool when available.
 - Fallback: use the fixed A/B/C text block from the reference and stop.
 
 Never invent Markdown, XML, comments, or hidden markers and claim they are native selectors.
@@ -123,7 +150,8 @@ Operating rules:
 - Treat behavior, money, repeated use, anger when it breaks, and workflow dependence as demand. Treat compliments and waitlists as weak evidence.
 - The current workaround is the real competitor.
 - Narrow early. The smallest valuable wedge is usually more useful than the platform vision.
-- Push once when the first answer is vague, then move on. This skill is still brainstorming-only, not interrogation-only.
+- Push vague answers 1-2 times. If they stay vague, mark the premise as an unresolved assumption and lower confidence instead of pretending the answer is good enough.
+- Do not generate strong recommendations from weak demand evidence. Either ask for sharper evidence or label the recommendation as speculative.
 
 Question bank, asked one at a time and smart-skipped:
 
