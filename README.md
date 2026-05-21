@@ -117,15 +117,28 @@ The companion `meta.json` tracks `checkpoint_count`, `last_checkpoint_at`,
 
 When the host supports a native choice UI, the skill uses it instead of prose.
 For Codex, that means `request_user_input` when it is listed in the current
-turn's tools. Current Codex exposes it in Plan mode by default; Default mode
-requires the `DefaultModeRequestUserInput` feature gate. For Claude Code, that
+turn's tools. Codex can expose that tool in Default mode when this is configured
+in `~/.codex/config.toml`:
+
+```toml
+[features]
+default_mode_request_user_input = true
+```
+
+Without that Codex config, the skill falls back to a fixed Markdown A/B/C choice
+block and waits for the user to reply with `A`, `B`, or `C`. The Markdown block is
+only a fallback; it is not native Codex option UI. For Claude Code, native choice
 means MCP elicitation unless the official host protocol changes. For gstack-style
 hosts, that means a real `AskUserQuestion` tool when available.
 
+To enable the Codex setting directly, send Codex this prompt:
+
+```text
+Please enable Codex Default-mode choice popups by adding [features] default_mode_request_user_input = true to ~/.codex/config.toml, preserving all existing settings.
+```
+
 The detailed host mapping lives in
-`brainstorming-only/references/user-choice-output-protocol.md`. Plain A/B/C text
-is fallback only and is not used for Codex decision pauses when the native tool
-is unavailable.
+`brainstorming-only/references/user-choice-output-protocol.md`.
 
 ## Privacy And Local Data
 

@@ -91,9 +91,22 @@ Use $brainstorming-only to compare these product directions and help me choose o
 
 ## 结构化选项
 
-当宿主支持原生选择 UI 时，这个 skill 会优先使用原生选择，而不是普通 prose。对 Codex 来说，就是在当前 turn 的工具列表里有 `request_user_input` 时使用它；当前 Codex 默认在 Plan mode 暴露这个工具，Default mode 需要 `DefaultModeRequestUserInput` feature gate。对 Claude Code 来说，就是使用 MCP elicitation，除非官方宿主协议发生变化；对 gstack 风格宿主来说，就是在可用时使用真实的 `AskUserQuestion` 工具。
+当宿主支持原生选择 UI 时，这个 skill 会优先使用原生选择，而不是普通 prose。对 Codex 来说，就是在当前 turn 的工具列表里有 `request_user_input` 时使用它；Codex Default mode 可以通过 `~/.codex/config.toml` 开启这个工具：
 
-详细宿主映射放在 `brainstorming-only/references/user-choice-output-protocol.md`。普通 A/B/C 文本只作为 fallback；Codex 缺少原生工具时不把它当作真正的决策暂停。
+```toml
+[features]
+default_mode_request_user_input = true
+```
+
+没有配置时，这个 skill 会退回固定 Markdown A/B/C 选项块，并等待用户回复 `A`、`B` 或 `C`。这个 Markdown 选项块只是 fallback，不是 Codex 原生弹窗。对 Claude Code 来说，原生选择是 MCP elicitation，除非官方宿主协议发生变化；对 gstack 风格宿主来说，就是在可用时使用真实的 `AskUserQuestion` 工具。
+
+想让 Codex 直接开启这个设置，可以把这句发给 Codex：
+
+```text
+请帮我在 ~/.codex/config.toml 里开启 Codex Default-mode 选项弹窗：添加 [features] default_mode_request_user_input = true，并保留现有配置。
+```
+
+详细宿主映射放在 `brainstorming-only/references/user-choice-output-protocol.md`。
 
 ## Session Journal
 

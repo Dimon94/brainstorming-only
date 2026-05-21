@@ -81,15 +81,20 @@ A) Minimal protocol fix (recommended)
 ## Codex Host Format
 
 Codex native choice UI is the `request_user_input` tool. Use it when it is
-listed in the available tools for the current turn. In current Codex builds, the
-tool is available in Plan mode by default; Default mode only exposes it when the
-`DefaultModeRequestUserInput` feature is enabled.
+listed in the available tools for the current turn. Codex Default mode exposes
+it when the `DefaultModeRequestUserInput` feature is enabled.
 
-If the current host is Codex but `request_user_input` is not listed, do not emit
-the fallback A/B/C decision block. State that native options are unavailable in
-the current mode, ask the user to switch the next turn/session to Plan mode (or
-enable Default-mode `request_user_input`), and stop. This prevents plain Markdown
-choices from masquerading as Codex option UI.
+Codex users can enable Default-mode native choices in `~/.codex/config.toml`:
+
+```toml
+[features]
+default_mode_request_user_input = true
+```
+
+If the current host is Codex but `request_user_input` is not listed, emit the
+fallback A/B/C decision block and stop. Do not ask the user to change
+collaboration modes. The fallback is plain Markdown, so it must not be called or
+implied to be the Codex native option UI.
 
 When the tool is available, ask exactly one decision question per pause point.
 
@@ -222,6 +227,5 @@ Fallback rules:
 1. Do not call the fallback block a native selector.
 2. Do not continue in the same turn after asking.
 3. Do not invent XML tags, comments, or hidden protocol markers.
-4. In Codex, do not use this fallback for real decision pauses when
-   `request_user_input` is unavailable; request Plan mode or the Default-mode
-   feature gate instead.
+4. In Codex, use this fallback for real decision pauses when `request_user_input`
+   is unavailable, and wait for the user to reply with A, B, or C.

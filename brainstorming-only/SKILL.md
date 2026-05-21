@@ -315,9 +315,8 @@ This protocol takes precedence over **Converge** and **Output Shape**. After ask
 Before asking a structured choice, read `references/user-choice-output-protocol.md` and follow the host-specific format:
 
 - Codex: use `request_user_input` when it is listed in the available tools. If
-  it is unavailable in Codex, do not write A/B/C fallback choices for a real
-  decision pause; ask the user to switch the next turn/session to Plan mode, or
-  enable Default-mode `request_user_input`, then stop.
+  it is unavailable in Codex, emit the fixed A/B/C Markdown fallback from the
+  reference and stop. Do not ask the user to change collaboration modes.
 - Claude Code: use MCP elicitation as the required structured-input path unless the official host protocol changes.
 - gstack-style hosts: use the real `AskUserQuestion` tool when available.
 - Fallback: use the fixed A/B/C text block from the reference and stop.

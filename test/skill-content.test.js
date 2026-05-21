@@ -31,7 +31,7 @@ test("journal helper is resolved before use and fails closed when missing", () =
   assert.match(skill, /return 1 2>\/dev\/null \|\| exit 1/);
 });
 
-test("skill requires Codex native choice UI instead of Markdown fallback", () => {
+test("skill documents Codex default-mode native choices and Markdown fallback", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
   const protocolPath = path.join(
     __dirname,
@@ -41,14 +41,31 @@ test("skill requires Codex native choice UI instead of Markdown fallback", () =>
     "user-choice-output-protocol.md"
   );
   const protocol = fs.readFileSync(protocolPath, "utf8");
+  const readme = fs.readFileSync(path.join(__dirname, "..", "README.md"), "utf8");
+  const readmeZh = fs.readFileSync(path.join(__dirname, "..", "README.zh-CN.md"), "utf8");
 
   assert.match(skill, /request_user_input` when it is listed in the available tools/);
-  assert.match(skill, /switch the next turn\/session to Plan mode/);
-  assert.match(skill, /enable Default-mode `request_user_input`/);
-  assert.match(protocol, /available in Plan mode by default/);
+  assert.match(skill, /emit the fixed A\/B\/C Markdown fallback/);
+  assert.match(skill, /Do not ask the user to change collaboration modes/);
   assert.match(protocol, /DefaultModeRequestUserInput/);
-  assert.match(protocol, /do not emit\s+the fallback A\/B\/C decision block/);
-  assert.match(protocol, /prevents plain Markdown\s+choices from masquerading as Codex option UI/);
+  assert.match(protocol, /default_mode_request_user_input = true/);
+  assert.match(protocol, /emit the\s+fallback A\/B\/C decision block and stop/);
+  assert.match(protocol, /Do not ask the user to change\s+collaboration modes/);
+  assert.match(protocol, /must not be called or\s+implied to be the Codex native option UI/);
+  assert.match(readme, /default_mode_request_user_input = true/);
+  assert.match(readme, /falls back to a fixed Markdown A\/B\/C choice\s+block/);
+  assert.match(readme, /Please enable Codex Default-mode choice popups/);
+  assert.match(readme, /preserving all existing settings/);
+  assert.match(readmeZh, /default_mode_request_user_input = true/);
+  assert.match(readmeZh, /固定 Markdown A\/B\/C 选项块/);
+  assert.match(readmeZh, /想让 Codex 直接开启这个设置/);
+  assert.match(readmeZh, /并保留现有配置/);
+
+  assert.doesNotMatch(skill, /Plan mode/);
+  assert.doesNotMatch(protocol, /Plan mode/);
+  assert.doesNotMatch(readme, /Plan mode/);
+  assert.doesNotMatch(readmeZh, /Plan mode/);
+  assert.doesNotMatch(protocol, /do not emit\s+the fallback A\/B\/C decision block/);
 });
 
 test("skill keeps external calibration conditional, private, and premise-focused", () => {
