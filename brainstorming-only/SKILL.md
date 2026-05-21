@@ -38,10 +38,6 @@ identity for this skill, and do not depend on a gstack runtime. The helper
 implements the same slug shape locally: explicit override, local
 `~/.brainstorming/slug-cache`, git remote `owner-repo`, then cwd basename.
 
-```bash
-node "$_JOURNAL_SCRIPT" state --cwd "$PWD"
-```
-
 Journal files live at:
 
 ```text
@@ -66,6 +62,10 @@ the current skill directory directly, try these common install locations:
 ```bash
 _JOURNAL_SCRIPT="$HOME/.codex/skills/brainstorming-only/scripts/journal.js"
 [ ! -f "$_JOURNAL_SCRIPT" ] && [ -f "$HOME/.claude/skills/brainstorming-only/scripts/journal.js" ] && _JOURNAL_SCRIPT="$HOME/.claude/skills/brainstorming-only/scripts/journal.js"
+if [ ! -f "$_JOURNAL_SCRIPT" ]; then
+  echo "Cannot resolve brainstorming-only journal helper: $_JOURNAL_SCRIPT" >&2
+  return 1 2>/dev/null || exit 1
+fi
 ```
 
 Start or recover the session before the first substantial brainstorming answer:
