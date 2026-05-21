@@ -30,3 +30,23 @@ test("journal helper is resolved before use and fails closed when missing", () =
   assert.match(skill, /Cannot resolve brainstorming-only journal helper/);
   assert.match(skill, /return 1 2>\/dev\/null \|\| exit 1/);
 });
+
+test("skill requires Codex native choice UI instead of Markdown fallback", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+  const protocolPath = path.join(
+    __dirname,
+    "..",
+    "brainstorming-only",
+    "references",
+    "user-choice-output-protocol.md"
+  );
+  const protocol = fs.readFileSync(protocolPath, "utf8");
+
+  assert.match(skill, /request_user_input` when it is listed in the available tools/);
+  assert.match(skill, /switch the next turn\/session to Plan mode/);
+  assert.match(skill, /enable Default-mode `request_user_input`/);
+  assert.match(protocol, /available in Plan mode by default/);
+  assert.match(protocol, /DefaultModeRequestUserInput/);
+  assert.match(protocol, /do not emit\s+the fallback A\/B\/C decision block/);
+  assert.match(protocol, /prevents plain Markdown\s+choices from masquerading as Codex option UI/);
+});
