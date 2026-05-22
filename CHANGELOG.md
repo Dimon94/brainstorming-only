@@ -7,6 +7,8 @@ and this project uses semantic versioning for npm releases.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-05-22
+
 ### Changed
 
 - Changed the brainstorming convergence contract so terminal outcomes can carry
