@@ -86,12 +86,15 @@ Use $brainstorming-only to compare these product directions and help me choose o
 - 三种姿态：通用讨论、产品诊断、Builder Mode。
 - 冷水式清晰度：先指出弱假设、缺证据和失败模式，而不是廉价附和。
 - 结构化决策暂停：宿主支持时使用原生选择 UI。
+- Outcome 开放选项：非阻塞的 A/B/C 后续路径合入最终 brainstorming outcome。
 - 本地 session journal：每 10 个有效问答对写一次 checkpoint，关键决策立即写。
 - 独立 project slug 逻辑：形状参考 [`office-hours`](https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md)，但不依赖 gstack runtime、命令、遥测或 cache。
 
 ## 结构化选项
 
-当宿主支持原生选择 UI 时，这个 skill 会优先使用原生选择，而不是普通 prose。对 Codex 来说，就是在当前 turn 的工具列表里有 `request_user_input` 时使用它；Codex Default mode 可以通过 `~/.codex/config.toml` 开启这个工具：
+这个 skill 区分“阻塞选择暂停”和“最终 outcome”。如果下一步推理必须等用户选一个方向，才使用宿主原生选择 UI；如果推荐方向已经清楚，最终 `Brainstorming outcome` 可以把非阻塞的 A/B/C 放进 `Open options`，而不是单独停下来让用户选。
+
+对 Codex 的阻塞选择来说，就是在当前 turn 的工具列表里有 `request_user_input` 时使用它；Codex Default mode 可以通过 `~/.codex/config.toml` 开启这个工具：
 
 ```toml
 [features]

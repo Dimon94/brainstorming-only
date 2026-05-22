@@ -5,6 +5,14 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project uses semantic versioning for npm releases.
 
+## [Unreleased]
+
+### Changed
+
+- Changed the brainstorming convergence contract so terminal outcomes can carry
+  non-blocking A/B/C open options, while host-native structured choices are
+  reserved for blocking decision pauses.
+
 ## [0.1.1] - 2026-05-22
 
 ### Added
