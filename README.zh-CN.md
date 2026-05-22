@@ -9,9 +9,9 @@
 
 `Brainstorming-Only` 是一个独立的 AI agent skill，用来做纯讨论型头脑风暴：澄清目标、比较选项、分析取舍、收敛决策，但不会进入规格文档、实施计划、脚手架、代码修改、提交或 PR。
 
-这个项目是单 SKILL 开源包。它致敬原始的 `$brainstorming` skill：保留协作式澄清、方案生成和取舍分析的核心精神，同时刻意切断后续执行链路，让它只服务于“想清楚”，不自动滑向“开始做”。它也吸收了 `office-hours` 风格的产品诊断能力，但不依赖 gstack 运行时、遥测、设计文档、提交或 PR 流程。
+这个项目是单 SKILL 开源包。它致敬 [Superpowers](https://github.com/obra/superpowers) 中原始的 [`$brainstorming` skill](https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md)：保留协作式澄清、方案生成和取舍分析的核心精神，同时刻意切断后续执行链路，让它只服务于“想清楚”，不自动滑向“开始做”。它也吸收了 [gstack](https://github.com/garrytan/gstack) 中 [`office-hours`](https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md) 风格的产品诊断能力，但不依赖 gstack 运行时、遥测、设计文档、提交或 PR 流程。
 
-长对话时，它会把少量恢复记录写到 `~/.brainstorming/`。这个记录使用和 `office-hours` 一样的 project slug 形状，但不依赖 gstack 运行时；上下文压缩后，可以从这个固定位置找回用户的一手决策、约束和原话证据，同时不会污染项目工作区。
+长对话时，它会把少量恢复记录写到 `~/.brainstorming/`。这个记录使用和 [`office-hours`](https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md) 一样的 project slug 形状，但不依赖 gstack 运行时；上下文压缩后，可以从这个固定位置找回用户的一手决策、约束和原话证据，同时不会污染项目工作区。
 
 ## 快速安装
 
@@ -87,7 +87,7 @@ Use $brainstorming-only to compare these product directions and help me choose o
 - 冷水式清晰度：先指出弱假设、缺证据和失败模式，而不是廉价附和。
 - 结构化决策暂停：宿主支持时使用原生选择 UI。
 - 本地 session journal：每 10 个有效问答对写一次 checkpoint，关键决策立即写。
-- 独立 project slug 逻辑：形状参考 `office-hours`，但不依赖 gstack runtime、命令、遥测或 cache。
+- 独立 project slug 逻辑：形状参考 [`office-hours`](https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md)，但不依赖 gstack runtime、命令、遥测或 cache。
 
 ## 结构化选项
 
@@ -134,6 +134,25 @@ default_mode_request_user_input = true
 session journal 是本地文件，只写到 `~/.brainstorming/`，不会写进当前项目目录。它的目的只是给上下文压缩后的恢复提供一手信息。skill 明确要求不要记录 credentials、tokens、private keys 或敏感个人数据；如果对话中出现敏感材料，只记录和决策相关的约束，并删掉秘密本身。
 
 这个包不需要 gstack telemetry、analytics 或 runtime 命令。
+
+## 前人工作与致谢
+
+`brainstorming-only` 能成立，是因为已有开源项目先把这些工作流模式做成了可学习、可检验的形状。这里明确引用并表达敬意：
+
+本项目独立维护，与下列项目及其维护者没有从属、赞助或官方背书关系。被引用项目仍归各自维护者维护，并遵循各自许可证。
+
+- [Superpowers](https://github.com/obra/superpowers)，尤其是其中的 [`$brainstorming` skill](https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md)：本项目致敬它的协作式澄清、方案生成、取舍分析，以及在实现前先收敛设计边界的精神；`brainstorming-only` 只是把这条链路收窄成纯讨论版本。
+- [gstack](https://github.com/garrytan/gstack)，尤其是其中的 [`office-hours`](https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md)：本项目借鉴它更锋利的产品诊断姿态，以及 project-slug 形状的恢复记录思路；同时保持对 gstack runtime、遥测和后续工作流的独立。
+
+## 推荐的 SKILL 套件
+
+如果你正在选择 agent skill 工作流，`brainstorming-only` 是刻意做小的选项：它适合只想先想清楚，但不希望自动进入计划或实现循环的场景。如果你需要更完整的工作流，我们推荐下面三个相关套件：
+
+| SKILL 套件 | 适合的人 | 适合的工作情节 |
+| --- | --- | --- |
+| [Superpowers](https://github.com/obra/superpowers) | 想给 coding agent 装上一整套通用软件工程方法论的开发者和团队。 | 适合从想法澄清、计划、测试驱动实现、调试、评审到发布都希望 agent 按纪律执行，而不是靠临时 prompt 推进的场景。 |
+| [gstack](https://github.com/garrytan/gstack) | 创业者、产品负责人、独立开发者，以及希望 agent 在产品判断、设计评审、工程评审、QA、发布和复盘上更有压迫感的团队。 | 适合问题不只是“怎么做”，而是“值不值得做、怎样做更有品味、怎样把产品意图变成更强计划并一路推进到交付”的场景。 |
+| [cc-devflow](https://github.com/Dimon94/cc-devflow)（同作者项目） | 想要小而明确、证据优先、可复用 repo 工作流的维护者和 agent-assisted 工程团队。 | 适合需要从一个 roadmap 入口出发，区分新需求闭环和 Bug 调查闭环，完成计划或调查、实现、验证、创建 PR、review-first landing，并把 durable artifacts 留在 `devflow/` 下的项目执行场景。 |
 
 ## 关注数趋势
 
