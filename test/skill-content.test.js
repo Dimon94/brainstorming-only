@@ -68,6 +68,33 @@ test("skill documents Codex default-mode native choices and Markdown fallback", 
   assert.doesNotMatch(protocol, /do not emit\s+the fallback A\/B\/C decision block/);
 });
 
+test("readmes cite prior art and avoid implying affiliation", () => {
+  const readme = fs.readFileSync(path.join(__dirname, "..", "README.md"), "utf8");
+  const readmeZh = fs.readFileSync(path.join(__dirname, "..", "README.zh-CN.md"), "utf8");
+
+  assert.match(readme, /## Prior Art And Attribution/);
+  assert.match(readme, /https:\/\/github\.com\/obra\/superpowers/);
+  assert.match(readme, /https:\/\/github\.com\/obra\/superpowers\/blob\/main\/skills\/brainstorming\/SKILL\.md/);
+  assert.match(readme, /https:\/\/github\.com\/garrytan\/gstack/);
+  assert.match(readme, /https:\/\/github\.com\/garrytan\/gstack\/blob\/main\/office-hours\/SKILL\.md/);
+  assert.match(readme, /https:\/\/github\.com\/Dimon94\/cc-devflow/);
+  assert.match(readme, /not\s+affiliated with, sponsored by, or endorsed by/);
+  assert.match(readme, /## Recommended Skill Suites/);
+  assert.match(readme, /one roadmap entry point, feature and bug-investigation loops, verification gates, PR review, and main-branch parity/);
+  assert.match(readme, /same maintainer/);
+
+  assert.match(readmeZh, /## 前人工作与致谢/);
+  assert.match(readmeZh, /https:\/\/github\.com\/obra\/superpowers/);
+  assert.match(readmeZh, /https:\/\/github\.com\/obra\/superpowers\/blob\/main\/skills\/brainstorming\/SKILL\.md/);
+  assert.match(readmeZh, /https:\/\/github\.com\/garrytan\/gstack/);
+  assert.match(readmeZh, /https:\/\/github\.com\/garrytan\/gstack\/blob\/main\/office-hours\/SKILL\.md/);
+  assert.match(readmeZh, /https:\/\/github\.com\/Dimon94\/cc-devflow/);
+  assert.match(readmeZh, /没有从属、赞助或官方背书关系/);
+  assert.match(readmeZh, /## 推荐的 SKILL 套件/);
+  assert.match(readmeZh, /同作者项目/);
+  assert.match(readmeZh, /区分新需求闭环和 Bug 调查闭环/);
+});
+
 test("skill keeps external calibration conditional, private, and premise-focused", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
 
