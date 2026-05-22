@@ -1,13 +1,13 @@
 # User Choice Output Protocol
 
-Use this reference when a brainstorming session reaches a real user decision. Host-native choice UI is preferred over prose. Text blocks are fallback only.
+Use this reference when a brainstorming session reaches a blocking user decision. Host-native choice UI is preferred over prose for blocking pauses. Text blocks are fallback only.
 
-Use for posture selection, premise approval, approach selection, scope trade-offs, and any choice that changes the rest of the brainstorming session. Do not use for every lightweight clarification.
+Use for posture selection, premise approval, approach selection, scope trade-offs, and any choice that must be resolved before the rest of the brainstorming session can continue. Do not use for every lightweight clarification. Do not use it for non-blocking alternatives that can be carried inside the final `Brainstorming outcome`.
 
 ## Contents
 
 - Decision Brief
-- Choice Pause Precedence
+- Blocking Choices And Outcome Options
 - Strict Self-Check
 - Pros / Cons Quality Bar
 - Codex Host Format
@@ -28,15 +28,17 @@ Prepare this brief before choosing the host output format:
 - Completeness note when options differ by coverage, or "options differ in kind" when coverage is not comparable.
 - Net impact: what the selected option changes downstream.
 
-## Choice Pause Precedence
+## Blocking Choices And Outcome Options
 
-A structured choice is a pause, not a final brainstorming outcome. If the session needs the user to choose A/B/C before the next reasoning step is valid, the choice protocol wins over any summary, convergence, or `Brainstorming outcome` instruction.
+A structured choice is a blocking pause, not the only way to show options. Use it only when the session needs the user to choose A/B/C before the next reasoning step is valid.
 
-After using a native choice tool, MCP elicitation, gstack `AskUserQuestion`, or fallback A/B/C text, stop immediately and wait. Do not append a decision summary, recommendation recap, or `Brainstorming outcome` in the same turn.
+Use `Brainstorming outcome` as the default terminal shape when the assistant can recommend a direction and no blocking choice remains. Non-blocking alternatives belong inside the outcome as `Open options` with A/B/C labels. This keeps the recommendation, rationale, decisions, open questions, and optional next paths in one response.
+
+After using a native choice tool, MCP elicitation, gstack `AskUserQuestion`, or fallback A/B/C text for a blocking pause, stop immediately and wait. Do not append a decision summary, recommendation recap, or `Brainstorming outcome` in the same turn.
 
 ## Strict Self-Check
 
-Before calling a structured choice tool or emitting fallback text, verify:
+Before calling a structured choice tool or emitting fallback text for a blocking pause, verify:
 
 - `D<N>` title exists and increments from the previous decision.
 - The question asks one decision, not multiple hidden decisions.
@@ -199,7 +201,7 @@ Rules:
 
 ## Fallback Text
 
-If no structured choice tool is available, emit this fixed text block and stop:
+If no structured choice tool is available for a blocking pause, emit this fixed text block and stop:
 
 ```text
 D<N> - <decision title>
@@ -229,3 +231,30 @@ Fallback rules:
 3. Do not invent XML tags, comments, or hidden protocol markers.
 4. In Codex, use this fallback for real decision pauses when `request_user_input`
    is unavailable, and wait for the user to reply with A, B, or C.
+
+## Outcome Open Options
+
+For terminal convergence, keep A/B/C alternatives inside `Brainstorming
+outcome` when they are useful but not blocking. Use this shape:
+
+```text
+Brainstorming outcome:
+- Recommended direction: <recommended option or synthesized direction>
+- Why: <why this direction wins>
+- Decisions made: <what is already settled>
+- Open options:
+  A) <recommended/current default> - <upside>; cost/risk: <trade-off>
+  B) <alternative> - <upside>; cost/risk: <trade-off>
+  C) <alternative, optional> - <upside>; cost/risk: <trade-off>
+- Open questions: <unknowns that still matter>
+```
+
+Rules:
+
+1. Use `Open options` only when there are meaningful paths the user may still
+   choose, reject, or combine later.
+2. Put the recommended or current default option first.
+3. Do not say "Reply with A, B, or C" for outcome open options; that language is
+   reserved for blocking pauses.
+4. Keep options short enough that the outcome remains the primary artifact, not
+   a disguised decision form.

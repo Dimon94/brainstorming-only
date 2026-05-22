@@ -197,7 +197,7 @@ Use these pressure tests when they fit:
    - Ask one question at a time when the answer will materially change the direction.
    - Walk the decision tree. Resolve upstream choices before downstream details.
    - For each non-trivial question, include your recommended answer and the reason.
-   - Prefer multiple-choice questions when they reduce effort for the user.
+   - Prefer multiple-choice questions when they reduce effort for the user, but only pause for a choice when the user's answer is blocking the next reasoning step.
    - Do not ask questions whose answer can be inferred from the user's request or local evidence.
    - If a question can be answered by inspecting local files or docs, inspect the narrow evidence instead of asking.
    - Smart-skip questions already answered by the user's prompt.
@@ -229,6 +229,7 @@ Use these pressure tests when they fit:
    - Offer 2-3 distinct approaches, concepts, or directions.
    - Make the options meaningfully different, not cosmetic variants.
    - Lead with the recommended option when there is enough evidence to recommend one.
+   - If the options are non-blocking alternatives, keep them available as A/B/C open options inside the final `Brainstorming outcome` instead of forcing a separate choice pause.
    - For each option, state the main upside, trade-off, and when it fits.
    - For non-trivial product or technical choices, include:
      - Minimal viable: smallest useful version.
@@ -247,14 +248,25 @@ Use these pressure tests when they fit:
 8. **Converge**
    - Do not converge directly from the user's preferred answer. First state the cold-water pass, then either revise the direction, ask a blocking question, or explain why the direction survives.
    - Summarize the strongest direction and the reason it wins.
+   - Preserve meaningful unresolved paths as A/B/C open options when they would help the user continue the discussion later.
    - Capture open questions separately from decisions.
    - End with a compact brainstorming outcome only after no blocking choice remains.
 
-## Decision Pauses vs Outcomes
+## Blocking Choices vs Outcomes
 
-Structured choice pauses outrank convergence. If a real user decision is pending, use **Host-Native Choice Protocol** and stop; do not include `Brainstorming outcome` in the same turn.
+Use `Brainstorming outcome` as the default terminal shape when the session has
+enough signal to recommend a direction. A/B/C options do not automatically mean
+the response must stop for a user choice.
 
-Use `Brainstorming outcome` only for terminal convergence after the user has answered the necessary choice, no blocking choice remains, or the user explicitly asks for a summary. A choice pause is not an outcome.
+Only use **Host-Native Choice Protocol** as a blocking pause when the user's
+selection is required before the next reasoning step is valid. After asking a
+blocking structured choice, stop and wait; do not include `Brainstorming
+outcome` in the same turn.
+
+When options are useful but not blocking, merge them into the outcome as
+`Open options` with A/B/C labels. Put the recommended or current default option
+first, state the trade-off for each option, and do not tell the user to reply
+with A/B/C unless it is a blocking pause.
 
 ## Core Brainstorming Moves
 
@@ -308,9 +320,11 @@ When the topic is a technical direction, API, module, workflow, or architecture 
 
 ## Host-Native Choice Protocol
 
-When the workflow reaches a real user decision, prefer host-native structured choice UI over prose. Use it for posture selection, premise approval, approach selection, scope trade-offs, and any choice that changes the discussion direction. Do not use it for every lightweight clarification.
+When the workflow reaches a blocking user decision, prefer host-native structured choice UI over prose. Use it for posture selection, premise approval, approach selection, scope trade-offs, and any choice that must be resolved before the discussion can continue. Do not use it for every lightweight clarification or for non-blocking alternatives that can live inside the outcome.
 
-This protocol takes precedence over **Converge** and **Output Shape**. After asking a structured choice, stop and wait for the user's answer.
+This protocol takes precedence over **Converge** and **Output Shape** only for
+blocking decisions. After asking a blocking structured choice, stop and wait for
+the user's answer.
 
 Before asking a structured choice, read `references/user-choice-output-protocol.md` and follow the host-specific format:
 
@@ -383,6 +397,7 @@ Brainstorming outcome:
 - Recommended direction:
 - Why:
 - Decisions made:
+- Open options:
 - Open questions:
 ```
 
