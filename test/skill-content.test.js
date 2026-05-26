@@ -47,23 +47,25 @@ test("skill documents Codex default-mode native choices and Markdown fallback", 
   assert.match(skill, /request_user_input` when it is listed in the available tools/);
   assert.match(skill, /emit the fixed A\/B\/C Markdown fallback/);
   assert.match(skill, /Do not ask the user to change collaboration modes/);
-  assert.match(skill, /Use `Brainstorming outcome` as the default terminal shape/);
-  assert.match(skill, /Open options` with A\/B\/C labels/);
+  assert.match(skill, /Use the same A\/B\/C option shape for terminal convergence and blocking pauses/);
+  assert.match(skill, /Every option set must include exactly one recommended option/);
   assert.match(protocol, /DefaultModeRequestUserInput/);
   assert.match(protocol, /default_mode_request_user_input = true/);
   assert.match(protocol, /emit the\s+fallback A\/B\/C decision block and stop/);
-  assert.match(protocol, /Non-blocking alternatives belong inside the outcome as `Open options` with A\/B\/C labels/);
-  assert.match(protocol, /Outcome Open Options/);
+  assert.match(protocol, /Use terminal A\/B\/C options as the default convergence shape/);
+  assert.match(protocol, /## Terminal Options/);
   assert.match(protocol, /Do not ask the user to change\s+collaboration modes/);
   assert.match(protocol, /must not be called or\s+implied to be the Codex native option UI/);
   assert.match(readme, /default_mode_request_user_input = true/);
   assert.match(readme, /falls back to a fixed Markdown A\/B\/C choice\s+block/);
-  assert.match(readme, /final\s+`Brainstorming outcome` can carry non-blocking A\/B\/C `Open options`/);
+  assert.match(readme, /one visible option format for blocking choice pauses and terminal\s+convergence/);
+  assert.match(readme, /marks one option as\s+recommended, and explains why that recommendation wins/);
   assert.match(readme, /Please enable Codex Default-mode choice popups/);
   assert.match(readme, /preserving all existing settings/);
   assert.match(readmeZh, /default_mode_request_user_input = true/);
   assert.match(readmeZh, /固定 Markdown A\/B\/C 选项块/);
-  assert.match(readmeZh, /最终 `Brainstorming outcome` 可以把非阻塞的 A\/B\/C 放进 `Open options`/);
+  assert.match(readmeZh, /同一种可见选项格式处理“阻塞选择暂停”和“最终收敛”/);
+  assert.match(readmeZh, /标出一个推荐项，并说明推荐理由/);
   assert.match(readmeZh, /想让 Codex 直接开启这个设置/);
   assert.match(readmeZh, /并保留现有配置/);
 
@@ -73,6 +75,10 @@ test("skill documents Codex default-mode native choices and Markdown fallback", 
   assert.doesNotMatch(readmeZh, /Plan mode/);
   assert.doesNotMatch(protocol, /do not emit\s+the fallback A\/B\/C decision block/);
   assert.doesNotMatch(skill, /Structured choice pauses outrank convergence/);
+  assert.doesNotMatch(skill, /Brainstorming outcome/);
+  assert.doesNotMatch(protocol, /Brainstorming outcome/);
+  assert.doesNotMatch(readme, /Brainstorming outcome/);
+  assert.doesNotMatch(readmeZh, /Brainstorming outcome/);
 });
 
 test("readmes cite prior art and avoid implying affiliation", () => {

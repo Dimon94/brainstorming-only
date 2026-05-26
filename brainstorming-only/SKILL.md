@@ -229,7 +229,8 @@ Use these pressure tests when they fit:
    - Offer 2-3 distinct approaches, concepts, or directions.
    - Make the options meaningfully different, not cosmetic variants.
    - Lead with the recommended option when there is enough evidence to recommend one.
-   - If the options are non-blocking alternatives, keep them available as A/B/C open options inside the final `Brainstorming outcome` instead of forcing a separate choice pause.
+   - Keep meaningful alternatives in the same A/B/C option format whether the choice is blocking or terminal.
+   - Every option set must include exactly one recommended option and a concrete reason for that recommendation.
    - For each option, state the main upside, trade-off, and when it fits.
    - For non-trivial product or technical choices, include:
      - Minimal viable: smallest useful version.
@@ -248,25 +249,25 @@ Use these pressure tests when they fit:
 8. **Converge**
    - Do not converge directly from the user's preferred answer. First state the cold-water pass, then either revise the direction, ask a blocking question, or explain why the direction survives.
    - Summarize the strongest direction and the reason it wins.
-   - Preserve meaningful unresolved paths as A/B/C open options when they would help the user continue the discussion later.
+   - Preserve meaningful unresolved paths as A/B/C options when they would help the user continue the discussion later.
    - Capture open questions separately from decisions.
-   - End with a compact brainstorming outcome only after no blocking choice remains.
+   - End with the unified options format after no blocking choice remains.
 
-## Blocking Choices vs Outcomes
+## Blocking Choices vs Terminal Options
 
-Use `Brainstorming outcome` as the default terminal shape when the session has
-enough signal to recommend a direction. A/B/C options do not automatically mean
-the response must stop for a user choice.
+Use the same A/B/C option shape for terminal convergence and blocking pauses.
+A/B/C options do not automatically mean the response must stop for a user
+choice.
 
 Only use **Host-Native Choice Protocol** as a blocking pause when the user's
 selection is required before the next reasoning step is valid. After asking a
-blocking structured choice, stop and wait; do not include `Brainstorming
-outcome` in the same turn.
+blocking structured choice, stop and wait; do not append a terminal summary in
+the same turn.
 
-When options are useful but not blocking, merge them into the outcome as
-`Open options` with A/B/C labels. Put the recommended or current default option
-first, state the trade-off for each option, and do not tell the user to reply
-with A/B/C unless it is a blocking pause.
+When options are useful but not blocking, present them as terminal A/B/C options.
+Put the recommended option first, mark it `(Recommended)`, explain why it wins,
+state the trade-off for each option, and do not tell the user to reply with
+A/B/C unless it is a blocking pause.
 
 ## Core Brainstorming Moves
 
@@ -393,11 +394,18 @@ Scale the response to the user's need:
 At terminal convergence, close with:
 
 ```markdown
-Brainstorming outcome:
-- Recommended direction:
-- Why:
-- Decisions made:
-- Open options:
+- Recommendation: <A/B/C> because <reason>
+- Decisions made: <what is already settled>
+Options:
+A) <recommended direction> (Recommended)
+   Good: <upside>
+   Cost/Risk: <cost or risk>
+B) <alternative>
+   Good: <upside>
+   Cost/Risk: <cost or risk>
+C) <alternative, optional>
+   Good: <upside>
+   Cost/Risk: <cost or risk>
 - Open questions:
 ```
 

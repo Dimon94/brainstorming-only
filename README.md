@@ -101,8 +101,8 @@ The companion `meta.json` tracks `checkpoint_count`, `last_checkpoint_at`,
 - Adversarial clarity: the skill names weak assumptions, missing evidence, and
   failure modes instead of cheaply agreeing.
 - Structured decision pauses that use the host's native choice UI when available.
-- Outcome open options that carry non-blocking A/B/C alternatives inside the
-  final brainstorming summary.
+- Unified A/B/C option output for both blocking pauses and terminal convergence,
+  always with one recommended option and the reason it wins.
 - Context recovery journal under `~/.brainstorming/`, with checkpoints every 10
   effective question-answer pairs and immediately after key decisions.
 - Standalone project slug logic inspired by
@@ -120,11 +120,11 @@ The companion `meta.json` tracks `checkpoint_count`, `last_checkpoint_at`,
 
 ## Structured Choices
 
-The skill separates blocking choice pauses from terminal outcomes. If the next
-reasoning step requires the user to choose, the skill uses the host's native
-choice UI when available. If the recommendation is already clear, the final
-`Brainstorming outcome` can carry non-blocking A/B/C `Open options` instead of
-stopping for a separate choice.
+The skill uses one visible option format for blocking choice pauses and terminal
+convergence. If the next reasoning step requires the user to choose, the skill
+uses the host's native choice UI when available. If the recommendation is already
+clear, the final response still uses A/B/C options, marks one option as
+recommended, and explains why that recommendation wins.
 
 For Codex blocking choices, that means `request_user_input` when it is listed in
 the current turn's tools. Codex can expose that tool in Default mode when this is

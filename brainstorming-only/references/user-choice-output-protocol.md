@@ -1,13 +1,13 @@
 # User Choice Output Protocol
 
-Use this reference when a brainstorming session reaches a blocking user decision. Host-native choice UI is preferred over prose for blocking pauses. Text blocks are fallback only.
+Use this reference when a brainstorming session reaches a user-facing option set. Host-native choice UI is preferred over prose for blocking pauses. Text blocks are fallback only.
 
-Use for posture selection, premise approval, approach selection, scope trade-offs, and any choice that must be resolved before the rest of the brainstorming session can continue. Do not use for every lightweight clarification. Do not use it for non-blocking alternatives that can be carried inside the final `Brainstorming outcome`.
+Use for posture selection, premise approval, approach selection, scope trade-offs, terminal convergence, and any choice that must be resolved before the rest of the brainstorming session can continue. Do not use for every lightweight clarification.
 
 ## Contents
 
 - Decision Brief
-- Blocking Choices And Outcome Options
+- Blocking Choices And Terminal Options
 - Strict Self-Check
 - Pros / Cons Quality Bar
 - Codex Host Format
@@ -28,13 +28,13 @@ Prepare this brief before choosing the host output format:
 - Completeness note when options differ by coverage, or "options differ in kind" when coverage is not comparable.
 - Net impact: what the selected option changes downstream.
 
-## Blocking Choices And Outcome Options
+## Blocking Choices And Terminal Options
 
 A structured choice is a blocking pause, not the only way to show options. Use it only when the session needs the user to choose A/B/C before the next reasoning step is valid.
 
-Use `Brainstorming outcome` as the default terminal shape when the assistant can recommend a direction and no blocking choice remains. Non-blocking alternatives belong inside the outcome as `Open options` with A/B/C labels. This keeps the recommendation, rationale, decisions, open questions, and optional next paths in one response.
+Use terminal A/B/C options as the default convergence shape when the assistant can recommend a direction and no blocking choice remains. The same visible option format appears in blocking and terminal cases; only the final instruction differs.
 
-After using a native choice tool, MCP elicitation, gstack `AskUserQuestion`, or fallback A/B/C text for a blocking pause, stop immediately and wait. Do not append a decision summary, recommendation recap, or `Brainstorming outcome` in the same turn.
+After using a native choice tool, MCP elicitation, gstack `AskUserQuestion`, or fallback A/B/C text for a blocking pause, stop immediately and wait. Do not append a decision summary or recommendation recap in the same turn.
 
 ## Strict Self-Check
 
@@ -232,29 +232,33 @@ Fallback rules:
 4. In Codex, use this fallback for real decision pauses when `request_user_input`
    is unavailable, and wait for the user to reply with A, B, or C.
 
-## Outcome Open Options
+## Terminal Options
 
-For terminal convergence, keep A/B/C alternatives inside `Brainstorming
-outcome` when they are useful but not blocking. Use this shape:
+For terminal convergence, keep the same A/B/C option shape even when the options
+are useful but not blocking. Use this shape:
 
 ```text
-Brainstorming outcome:
-- Recommended direction: <recommended option or synthesized direction>
-- Why: <why this direction wins>
+- Recommendation: <A/B/C> because <why this direction wins>
 - Decisions made: <what is already settled>
-- Open options:
-  A) <recommended/current default> - <upside>; cost/risk: <trade-off>
-  B) <alternative> - <upside>; cost/risk: <trade-off>
-  C) <alternative, optional> - <upside>; cost/risk: <trade-off>
+Options:
+A) <recommended direction> (Recommended)
+   Good: <upside>
+   Cost/Risk: <cost or risk>
+B) <alternative>
+   Good: <upside>
+   Cost/Risk: <cost or risk>
+C) <alternative, optional>
+   Good: <upside>
+   Cost/Risk: <cost or risk>
 - Open questions: <unknowns that still matter>
 ```
 
 Rules:
 
-1. Use `Open options` only when there are meaningful paths the user may still
+1. Use terminal options when there are meaningful paths the user may still
    choose, reject, or combine later.
-2. Put the recommended or current default option first.
-3. Do not say "Reply with A, B, or C" for outcome open options; that language is
+2. Put the recommended option first and mark it `(Recommended)`.
+3. Do not say "Reply with A, B, or C" for terminal options; that language is
    reserved for blocking pauses.
-4. Keep options short enough that the outcome remains the primary artifact, not
-   a disguised decision form.
+4. Always include `Recommendation: <A/B/C> because <reason>` before the options.
+5. Keep options short enough that the recommendation remains easy to scan.
