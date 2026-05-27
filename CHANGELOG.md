@@ -7,6 +7,15 @@ and this project uses semantic versioning for npm releases.
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-05-27
+
+### Changed
+
+- Unified terminal convergence and blocking choice pauses around the same A/B/C
+  option format, with exactly one recommended option and an explicit reason.
+- Updated the skill protocol, README docs, and content tests to remove the old
+  `Brainstorming outcome` / `Open options` terminal shape.
+
 ## [0.1.2] - 2026-05-22
 
 ### Changed
