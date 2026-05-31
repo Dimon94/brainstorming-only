@@ -134,6 +134,44 @@ node "$_JOURNAL_SCRIPT" close --session "<session-dir>" --summary "<final summar
 This sets `meta.json.status` to `closed`, writes `closed_at` and
 `final_summary`, removes `active`, and leaves `latest` for recovery.
 
+## Project Context Docs
+
+When brainstorming is tied to a local project, check for existing domain context
+before the first substantial answer. Read only the narrow files that already
+exist and are relevant to the topic:
+
+- If `CONTEXT-MAP.md` exists at the project root, read it first to identify the
+  relevant contexts. After that, read only the relevant context `CONTEXT.md`
+  files and applicable `docs/adr/*.md` files. Treat `CONTEXT-MAP.md` as an
+  active multi-context signal only when the file exists.
+- If no `CONTEXT-MAP.md` exists but a root `CONTEXT.md` exists, treat the
+  project as a single context and read that file plus applicable `docs/adr/*.md`
+  files.
+- If neither `CONTEXT-MAP.md` nor `CONTEXT.md` exists, continue normally. Do not
+  mention `CONTEXT-MAP.md`, do not suggest creating it, and do not add a context
+  documentation thread unless the brainstorming produces a concrete term or
+  decision worth preserving.
+
+Use these files as grounding, not as a documentation project:
+
+- Challenge user language against existing `CONTEXT.md` terms when there is a
+  conflict or overloaded term.
+- Keep `CONTEXT.md` glossary-only: project-specific terms and boundaries, no
+  implementation detail, scratch notes, task prose, or specs.
+- Treat `CONTEXT-MAP.md` as the map for an already multi-context repo. Update it
+  only when an existing multi-context map needs a new context or relationship
+  that was explicitly confirmed during the conversation.
+- Treat ADRs as sparse decision records under `docs/adr/`, numbered
+  sequentially. Offer one only when a decision is hard to reverse, surprising
+  without context, and the result of a real trade-off.
+
+During convergence, run a context-docs check if the session resolved a durable
+term, boundary, project relationship, or hard-to-reverse decision. Propose the
+exact small addition and ask the user to confirm before editing any project
+file. If the user does not confirm, record the candidate in the brainstorming
+journal only. If there is no substantive new term or decision, do not modify or
+suggest modifying the project knowledge files.
+
 ## Adversarial Clarity
 
 No cheap praise. The skill should help the user think, not make a weak idea look finished.
@@ -184,6 +222,7 @@ Use these pressure tests when they fit:
    - Restate the user's goal in one or two sentences.
    - If the request is ambiguous, name the ambiguity directly.
    - If project context matters and is locally available, inspect only the minimum evidence needed to avoid guessing.
+   - For local project topics, read existing project context docs first as described in **Project Context Docs**. If `CONTEXT-MAP.md` does not exist, do not treat the repo as multi-context and do not keep reminding the user about `CONTEXT-MAP.md`.
    - If the user starts from a local detail, zoom out first: name the actors, surfaces, constraints, existing alternatives, and what decision is actually being made.
 
 2. **Choose the posture**
@@ -251,6 +290,7 @@ Use these pressure tests when they fit:
    - Summarize the strongest direction and the reason it wins.
    - Preserve meaningful unresolved paths as A/B/C options when they would help the user continue the discussion later.
    - Capture open questions separately from decisions.
+   - If the conversation created durable glossary terms, context relationships, or ADR-worthy decisions, propose the exact `CONTEXT.md`, existing `CONTEXT-MAP.md`, or `docs/adr/*.md` addition and ask for confirmation before writing it.
    - End with the unified options format after no blocking choice remains.
 
 ## Blocking Choices vs Terminal Options
@@ -420,11 +460,13 @@ This skill may:
 - Compare approaches and trade-offs.
 - Produce rough concepts, outlines, diagrams in text, decision tables, or summaries.
 - Inspect existing files or docs only when needed to ground the conversation.
+- After explicit user confirmation, add a narrow project-context note to `CONTEXT.md`, an existing `CONTEXT-MAP.md`, or `docs/adr/*.md` when the brainstorming session resolved a durable term, context relationship, or ADR-worthy decision.
 
 This skill must not:
 
-- Write or modify project files unless the user explicitly asks for a brainstorming artifact file. The `~/.brainstorming/` session journal is allowed because it is outside the project workspace.
+- Write or modify project files unless the user explicitly asks for a brainstorming artifact file or confirms a proposed project-context documentation addition. The `~/.brainstorming/` session journal is allowed because it is outside the project workspace.
 - Create specs under `docs/`, commit files, open PRs, or update roadmaps.
+- Create or suggest `CONTEXT-MAP.md` when the project does not already have one.
 - Invoke `writing-plans`, implementation skills, design-production skills, or release workflows.
 - Start a dev server, scaffold a project, install dependencies, or run broad test suites.
 - Treat user approval of an idea as approval to implement it.

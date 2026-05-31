@@ -141,3 +141,23 @@ test("skill keeps external calibration conditional, private, and premise-focused
   assert.doesNotMatch(skill, /always search the web for every brainstorming session/i);
   assert.doesNotMatch(skill, /write a design document after external calibration/i);
 });
+
+test("skill supports confirmed self-growing project context docs", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+
+  assert.match(skill, /## Project Context Docs/);
+  assert.match(skill, /check for existing domain context/);
+  assert.match(skill, /If `CONTEXT-MAP\.md` exists at the project root, read it first/);
+  assert.match(skill, /Treat `CONTEXT-MAP\.md` as an\s+active multi-context signal only when the file exists/);
+  assert.match(skill, /If no `CONTEXT-MAP\.md` exists but a root `CONTEXT\.md` exists/);
+  assert.match(skill, /If neither `CONTEXT-MAP\.md` nor `CONTEXT\.md` exists, continue normally/);
+  assert.match(skill, /do not suggest creating it/);
+  assert.match(skill, /Keep `CONTEXT\.md` glossary-only/);
+  assert.match(skill, /Treat ADRs as sparse decision records under `docs\/adr\/`/);
+  assert.match(skill, /hard to reverse, surprising\s+without context, and the result of a real trade-off/);
+  assert.match(skill, /Propose the\s+exact small addition and ask the user to confirm before editing any project\s+file/);
+  assert.match(skill, /Create or suggest `CONTEXT-MAP\.md` when the project does not already have one/);
+
+  assert.doesNotMatch(skill, /always create `CONTEXT-MAP\.md`/i);
+  assert.doesNotMatch(skill, /update `CONTEXT\.md` right there/i);
+});
