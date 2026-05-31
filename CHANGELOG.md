@@ -7,6 +7,18 @@ and this project uses semantic versioning for npm releases.
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-05-31
+
+### Added
+
+- Added project-context documentation rules for reading existing `CONTEXT.md`,
+  existing `CONTEXT-MAP.md`, and applicable ADRs before local-project
+  brainstorming.
+- Added a confirmed-only update path for durable glossary terms, context
+  relationships, and ADR-worthy decisions discovered during brainstorming.
+- Added content tests that keep `CONTEXT-MAP.md` opt-in based on the file
+  already existing in the project.
+
 ## [0.1.3] - 2026-05-27
 
 ### Changed
