@@ -7,6 +7,21 @@ and this project uses semantic versioning for npm releases.
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced the legacy local session journal persistence model with
+  project-context docs: inline `CONTEXT.md` glossary updates and sparse ADRs for
+  hard-to-reverse trade-off decisions.
+- Restructured `SKILL.md` around progressive disclosure: the main skill file is
+  now a concise entry point, with detailed brainstorming and context-doc rules
+  moved to one-level `references/` files.
+- Updated README, architecture, contributing, and security docs to describe the
+  project-context-docs persistence boundary.
+
+### Removed
+
+- Removed the bundled `journal.js` helper and journal behavior tests.
+
 ## [0.1.4] - 2026-05-31
 
 ### Added

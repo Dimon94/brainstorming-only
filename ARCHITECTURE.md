@@ -1,7 +1,7 @@
 # Architecture
 
-`brainstorming-only` is intentionally small. It ships one agent skill, a local
-installer, and a journal helper for long brainstorming sessions.
+`brainstorming-only` is intentionally small. It ships one agent skill and a
+local installer.
 
 ## Package Layout
 
@@ -9,12 +9,13 @@ installer, and a journal helper for long brainstorming sessions.
 brainstorming-only/
   SKILL.md
   agents/openai.yaml
+  references/brainstorming-method.md
+  references/project-context-docs.md
+  references/recommendation-reliability.md
   references/user-choice-output-protocol.md
-  scripts/journal.js
 scripts/
   install.js
 test/
-  journal.test.js
   skill-content.test.js
 ```
 
@@ -39,8 +40,9 @@ skill directories.
 
 ## Skill Contract
 
-`SKILL.md` is the runtime contract. It keeps the agent in a discussion-only
-mode:
+`SKILL.md` is the concise runtime entry point. It keeps the agent in a
+discussion-only mode and routes detailed behavior into one-level reference
+files:
 
 - Frame the topic.
 - Choose a brainstorming posture.
@@ -48,6 +50,10 @@ mode:
 - Challenge premises.
 - Generate and stress-test options.
 - Converge only when no blocking choice remains.
+
+Detailed brainstorming method, project-context persistence rules,
+recommendation reliability, and host-specific choice handling live under
+`brainstorming-only/references/`.
 
 The hard boundary is deliberate: this skill does not start implementation,
 planning, scaffolding, commits, or PR work. If the user wants those steps, they
@@ -67,49 +73,23 @@ The skill prefers host-native choice UI:
 Plain text A/B/C choices are fallback only. Codex decision pauses do not use
 plain Markdown as a fake native UI when `request_user_input` is unavailable.
 
-## Session Journal
+## Project Context Docs
 
-`brainstorming-only/scripts/journal.js` manages a local recovery journal:
+The skill has no separate recovery journal, checkpoint helper, or hidden local
+cache. When a brainstorming session is tied to a local project, durable
+knowledge is captured only through project-owned context docs:
 
-```text
-~/.brainstorming/projects/<project-slug>/
-  sessions/
-    YYYYMMDD-HHMMSS-<topic-slug>/
-      brainstorming.md
-      meta.json
-  active -> sessions/<current-session>
-  latest -> sessions/<most-recent-session>
-```
-
-The journal exists so long conversations can survive model context compression.
-It records compact checkpoints, key decisions, open questions, and a few short
-user quotes as evidence.
-
-`meta.json` includes recovery fields:
-
-- `checkpoint_count`
-- `last_checkpoint_at`
-- `qa_since_checkpoint`
-- `decision_count`
-- `status`
-- `closed_at`
-- `final_summary`
-
-The helper's project slug logic is standalone:
-
-1. `BRAINSTORMING_PROJECT_SLUG` or `SLUG`
-2. `~/.brainstorming/slug-cache`
-3. git remote shape `owner-repo`
-4. current directory basename
-
-It does not call any gstack runtime command, runtime environment path, telemetry
-hook, or gstack-owned slug cache.
+- `CONTEXT.md` for resolved glossary terms, boundaries, and domain
+  relationships.
+- An existing `CONTEXT-MAP.md` only when the repo already uses multiple
+  contexts.
+- Sparse ADRs under `docs/adr/` for decisions that are hard to reverse,
+  surprising without context, and the result of a real trade-off.
 
 ## Privacy Boundary
 
-The journal is local-only and outside the project workspace. The skill tells the
-agent to redact credentials, tokens, private keys, and sensitive personal data.
-The package does not require network access, telemetry, or a gstack runtime.
+The package does not create local conversation archives or hidden recovery
+directories. It does not require network access, telemetry, or a gstack runtime.
 
 ## Verification
 
@@ -120,5 +100,5 @@ npm test
 npm run pack:check
 ```
 
-The tests cover journal behavior, session close semantics, project slug
-independence from gstack runtime files, and key skill text contracts.
+The tests cover key skill text contracts, including the absence of the legacy
+journal mechanism and the project-context documentation rules.

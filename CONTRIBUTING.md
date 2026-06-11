@@ -29,7 +29,9 @@ node scripts/install.js --claude
 
 - Keep the skill discussion-only. Do not add automatic planning,
   implementation, commit, PR, or scaffold behavior.
-- Keep recovery data outside the project workspace under `~/.brainstorming/`.
+- Do not add standalone persistence. Durable project knowledge belongs only in
+  glossary-only `CONTEXT.md` files, existing `CONTEXT-MAP.md`, or sparse ADRs
+  when the skill contract allows it.
 - Do not introduce gstack runtime dependencies. The project may describe
   gstack-style hosts, but the package must not call gstack runtime commands,
   gstack environment paths, gstack-owned caches, or telemetry tools.
@@ -46,8 +48,6 @@ npm test
 npm run pack:check
 git diff --check
 ```
-
-For journal changes, include tests in `test/journal.test.js`.
 
 For skill contract or README changes, include tests in
 `test/skill-content.test.js` when the contract is important enough to protect.

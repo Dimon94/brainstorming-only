@@ -10,7 +10,7 @@
 Standalone AI agent skill for focused brainstorming without drifting into specs,
 plans, commits, scaffolding, or implementation.
 
-Supports both Codex and Claude skill directories from one shared `SKILL.md`.
+Supports both Codex and Claude skill directories from one shared skill bundle.
 
 This project is a single-skill package. It is a focused, standalone homage to
 the original [`$brainstorming` skill](https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md)
@@ -22,11 +22,10 @@ product diagnostic posture from [gstack](https://github.com/garrytan/gstack)
 for sharper "is this worth building?" conversations, while staying independent
 from gstack telemetry, design docs, commits, and downstream workflow machinery.
 
-For long sessions, it keeps a small local recovery journal under
-`~/.brainstorming/`. The journal uses the same project slug shape as
-[`office-hours`](https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md)
-without depending on the gstack runtime, so compressed context can recover the
-latest first-hand decisions without writing into the project workspace.
+When brainstorming is tied to a local project, durable terms and hard-to-reverse
+decisions are captured through project context docs: glossary-only `CONTEXT.md`
+files and sparse ADRs under `docs/adr/`. It does not keep a separate session
+journal, hidden local cache, or recovery directory.
 
 ## Quick Install
 
@@ -82,16 +81,9 @@ trade-offs, and summarize the decision. It must not create specs, write
 implementation plans, scaffold files, commit changes, open PRs, or transition
 into another workflow.
 
-During longer conversations, the skill checkpoints the session after every 10
-effective question-answer pairs and immediately after key decisions. Each
-checkpoint is written to:
-
-```text
-~/.brainstorming/projects/<project-slug>/sessions/<timestamp>-<topic-slug>/brainstorming.md
-```
-
-The companion `meta.json` tracks `checkpoint_count`, `last_checkpoint_at`,
-`qa_since_checkpoint`, `status`, and the `active` / `latest` recovery pointers.
+When the discussion resolves durable project language, the skill updates the
+applicable `CONTEXT.md` inline. ADRs are offered only when a decision is hard to
+reverse, surprising without context, and the result of a real trade-off.
 
 ## What It Adds
 
@@ -103,11 +95,9 @@ The companion `meta.json` tracks `checkpoint_count`, `last_checkpoint_at`,
 - Structured decision pauses that use the host's native choice UI when available.
 - Unified A/B/C option output for both blocking pauses and terminal convergence,
   always with one recommended option and the reason it wins.
-- Context recovery journal under `~/.brainstorming/`, with checkpoints every 10
-  effective question-answer pairs and immediately after key decisions.
-- Standalone project slug logic inspired by
-  [`office-hours`](https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md),
-  without depending on gstack runtime files, commands, telemetry, or caches.
+- Project context docs as the only persistence surface: glossary-only
+  `CONTEXT.md` updates for resolved language and sparse ADRs for durable
+  trade-off decisions.
 
 ## Modes
 
@@ -152,12 +142,10 @@ The detailed host mapping lives in
 
 ## Privacy And Local Data
 
-The session journal is local-only. It writes under `~/.brainstorming/`, not the
-current project directory, and it is meant for recovery after context
-compression. The skill instructs agents not to record credentials, tokens,
-private keys, or sensitive personal data. If sensitive material appears during a
-conversation, the journal should capture only the decision-relevant constraint
-and redact the secret itself.
+The package no longer creates local recovery journals or hidden cache
+directories. For local project discussions, durable knowledge is written only to
+project-owned context docs when it has been resolved: `CONTEXT.md`,
+pre-existing `CONTEXT-MAP.md`, or sparse ADRs under `docs/adr/`.
 
 No gstack telemetry, analytics, or runtime commands are required for this
 package.
@@ -178,10 +166,9 @@ We cite them directly here with respect:
   a narrower discussion-only form.
 - [gstack](https://github.com/garrytan/gstack), especially its
   [`office-hours`](https://github.com/garrytan/gstack/blob/main/office-hours/SKILL.md),
-  inspired the sharper product diagnostic posture and the project-slug-shaped
-  recovery journal. This package borrows those ideas respectfully while staying
-  independent from the gstack runtime, telemetry, and downstream workflow
-  machinery.
+  inspired the sharper product diagnostic posture. This package borrows those
+  ideas respectfully while staying independent from the gstack runtime,
+  telemetry, and downstream workflow machinery.
 
 ## Recommended Skill Suites
 
@@ -221,8 +208,10 @@ after the brainstorming session ends.
 ## What's Included
 
 - `brainstorming-only/SKILL.md` - the skill instructions.
+- `brainstorming-only/references/brainstorming-method.md` - detailed brainstorming workflow, postures, pressure tests, and output shape.
+- `brainstorming-only/references/project-context-docs.md` - `CONTEXT.md` and ADR persistence rules.
+- `brainstorming-only/references/recommendation-reliability.md` - second-sample and roundtable recommendation checks.
 - `brainstorming-only/references/user-choice-output-protocol.md` - host-specific structured choice protocol.
-- `brainstorming-only/scripts/journal.js` - local session journal helper.
 - `brainstorming-only/agents/openai.yaml` - optional UI metadata for compatible skill lists.
 - `scripts/install.js` - npm installer that copies the skill into `CODEX_HOME`
   and `CLAUDE_HOME`.

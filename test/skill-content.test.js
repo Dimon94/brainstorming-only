@@ -4,51 +4,70 @@ const path = require("path");
 const test = require("node:test");
 
 const skillPath = path.join(__dirname, "..", "brainstorming-only", "SKILL.md");
+const referencesDir = path.join(__dirname, "..", "brainstorming-only", "references");
 
-test("skill encodes adversarial brainstorming instead of cheap affirmation", () => {
+test("skill follows write-a-skill progressive disclosure structure", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
+  const lineCount = skill.trimEnd().split("\n").length;
+  const description = skill.match(/description: "([^"]+)"/)[1];
 
-  assert.match(skill, /## Adversarial Clarity/);
-  assert.match(skill, /No cheap praise/);
-  assert.match(skill, /weak idea look finished/);
-  assert.match(skill, /hidden assumptions/);
-  assert.match(skill, /pre-mortem/);
-  assert.match(skill, /What would make this collapse\?/);
+  assert.ok(lineCount <= 100, `SKILL.md should stay under 100 lines, got ${lineCount}`);
+  assert.ok(description.length <= 1024);
+  assert.match(description, /^Facilitates standalone brainstorming/);
+  assert.match(description, /Use when/);
+  assert.match(skill, /## Quick Start/);
+  assert.match(skill, /## Load References/);
+  assert.match(skill, /references\/brainstorming-method\.md/);
+  assert.match(skill, /references\/project-context-docs\.md/);
+  assert.match(skill, /references\/recommendation-reliability\.md/);
+  assert.match(skill, /references\/user-choice-output-protocol\.md/);
+  assert.doesNotMatch(skill, /## Adversarial Clarity/);
+  assert.doesNotMatch(skill, /## Product Diagnostic Posture/);
 });
 
-test("journal helper is resolved before use and fails closed when missing", () => {
-  const skill = fs.readFileSync(skillPath, "utf8");
-  const helperSetup = '_JOURNAL_SCRIPT="$HOME/.codex/skills/brainstorming-only/scripts/journal.js"';
-  const firstHelperUse = 'node "$_JOURNAL_SCRIPT"';
+test("method reference encodes adversarial brainstorming instead of cheap affirmation", () => {
+  const method = fs.readFileSync(path.join(referencesDir, "brainstorming-method.md"), "utf8");
 
-  assert.ok(skill.includes(helperSetup));
-  assert.ok(skill.includes(firstHelperUse));
-  assert.ok(
-    skill.indexOf(helperSetup) < skill.indexOf(firstHelperUse),
-    "journal helper path must be assigned before the first node invocation"
-  );
-  assert.match(skill, /Cannot resolve brainstorming-only journal helper/);
-  assert.match(skill, /return 1 2>\/dev\/null \|\| exit 1/);
+  assert.match(method, /## Adversarial Clarity/);
+  assert.match(method, /No cheap praise/);
+  assert.match(method, /weak idea look finished/);
+  assert.match(method, /hidden assumptions/);
+  assert.match(method, /pre-mortem/);
+  assert.match(method, /What would make this collapse\?/);
+});
+
+test("skill uses project context docs instead of legacy local persistence", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+  const contextDocs = fs.readFileSync(path.join(referencesDir, "project-context-docs.md"), "utf8");
+  const readme = fs.readFileSync(path.join(__dirname, "..", "README.md"), "utf8");
+  const readmeZh = fs.readFileSync(path.join(__dirname, "..", "README.zh-CN.md"), "utf8");
+  const architecture = fs.readFileSync(path.join(__dirname, "..", "ARCHITECTURE.md"), "utf8");
+
+  assert.match(skill, /Durable knowledge persists only through project context docs/);
+  assert.match(skill, /references\/project-context-docs\.md/);
+  assert.match(contextDocs, /Do not create a separate session journal/);
+  assert.match(contextDocs, /When a term is resolved, update the applicable `CONTEXT\.md` inline/);
+  assert.match(readme, /It does not keep a separate session\s+journal, hidden local cache, or recovery directory/);
+  assert.match(readmeZh, /不再维护单独的 session journal、隐藏本地缓存或恢复目录/);
+  assert.match(architecture, /no separate recovery journal, checkpoint helper, or hidden local\s+cache/);
+
+  assert.doesNotMatch(skill, /_JOURNAL_SCRIPT/);
+  assert.doesNotMatch(skill, /scripts\/journal\.js/);
+  assert.doesNotMatch(skill, /~\/\.brainstorming/);
+  assert.doesNotMatch(skill, /record-qa/);
+  assert.doesNotMatch(readme, /~\/\.brainstorming/);
+  assert.doesNotMatch(readmeZh, /~\/\.brainstorming/);
+  assert.doesNotMatch(architecture, /scripts\/journal\.js/);
 });
 
 test("skill documents Codex default-mode native choices and Markdown fallback", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
-  const protocolPath = path.join(
-    __dirname,
-    "..",
-    "brainstorming-only",
-    "references",
-    "user-choice-output-protocol.md"
-  );
-  const protocol = fs.readFileSync(protocolPath, "utf8");
+  const protocol = fs.readFileSync(path.join(referencesDir, "user-choice-output-protocol.md"), "utf8");
   const readme = fs.readFileSync(path.join(__dirname, "..", "README.md"), "utf8");
   const readmeZh = fs.readFileSync(path.join(__dirname, "..", "README.zh-CN.md"), "utf8");
 
-  assert.match(skill, /request_user_input` when it is listed in the available tools/);
-  assert.match(skill, /emit the fixed A\/B\/C Markdown fallback/);
-  assert.match(skill, /Do not ask the user to change collaboration modes/);
   assert.match(skill, /Use the same A\/B\/C option shape for terminal convergence and blocking pauses/);
-  assert.match(skill, /Every option set must include exactly one recommended option/);
+  assert.match(skill, /references\/user-choice-output-protocol\.md/);
   assert.match(protocol, /DefaultModeRequestUserInput/);
   assert.match(protocol, /default_mode_request_user_input = true/);
   assert.match(protocol, /emit the\s+fallback A\/B\/C decision block and stop/);
@@ -109,71 +128,34 @@ test("readmes cite prior art and avoid implying affiliation", () => {
 });
 
 test("skill keeps external calibration conditional, private, and premise-focused", () => {
-  const skill = fs.readFileSync(skillPath, "utf8");
+  const method = fs.readFileSync(path.join(referencesDir, "brainstorming-method.md"), "utf8");
 
-  const targetedQuestions = "3. **Ask targeted questions**";
-  const externalCalibration = "4. **External calibration**";
-  const premiseChallenge = "5. **Challenge the premises**";
+  assert.match(method, /## External Calibration/);
+  assert.match(method, /Trigger only when external reality can materially change the discussion/);
+  assert.match(method, /product, market, adoption/);
+  assert.match(method, /current best\s+practices/);
+  assert.match(method, /competitors, substitutes, incumbent workflows/);
+  assert.match(method, /Show generalized search terms/);
+  assert.match(method, /Do not search for project names, company\s+names, proprietary concepts, customer names, or sensitive details/);
+  assert.match(method, /2-3 high-signal sources/);
+  assert.match(method, /common wisdom/);
+  assert.match(method, /current discourse/);
+  assert.match(method, /implication for our premises/);
+  assert.match(method, /must not be the final judge/);
 
-  assert.ok(skill.includes(externalCalibration));
-  assert.ok(
-    skill.indexOf(targetedQuestions) < skill.indexOf(externalCalibration),
-    "external calibration must happen after internal framing and targeted questions"
-  );
-  assert.ok(
-    skill.indexOf(externalCalibration) < skill.indexOf(premiseChallenge),
-    "external calibration must feed premise challenge before options and convergence"
-  );
-
-  assert.match(skill, /Trigger only when/);
-  assert.match(skill, /product, market, adoption/);
-  assert.match(skill, /current best practices/);
-  assert.match(skill, /competitors, substitutes, or incumbent workflows/);
-  assert.match(skill, /Show the generalized search terms/);
-  assert.match(skill, /Do not search for project names, company names, proprietary concepts, customer names, or sensitive details/);
-  assert.match(skill, /2-3 high-signal sources/);
-  assert.match(skill, /common wisdom/);
-  assert.match(skill, /current discourse/);
-  assert.match(skill, /implication for our premises/);
-  assert.match(skill, /must not be the final judge/);
-  assert.match(skill, /do not turn this into a competitive-research report, design document, implementation plan, or final-ranking mechanism/);
-
-  assert.doesNotMatch(skill, /always search the web for every brainstorming session/i);
-  assert.doesNotMatch(skill, /write a design document after external calibration/i);
+  assert.doesNotMatch(method, /always search the web for every brainstorming session/i);
+  assert.doesNotMatch(method, /write a design document after external calibration/i);
 });
 
 test("skill gates non-trivial recommendations through reliability checks", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
-  const protocol = fs.readFileSync(
-    path.join(
-      __dirname,
-      "..",
-      "brainstorming-only",
-      "references",
-      "user-choice-output-protocol.md"
-    ),
-    "utf8"
-  );
-  const reliability = fs.readFileSync(
-    path.join(
-      __dirname,
-      "..",
-      "brainstorming-only",
-      "references",
-      "recommendation-reliability.md"
-    ),
-    "utf8"
-  );
+  const method = fs.readFileSync(path.join(referencesDir, "brainstorming-method.md"), "utf8");
+  const protocol = fs.readFileSync(path.join(referencesDir, "user-choice-output-protocol.md"), "utf8");
+  const reliability = fs.readFileSync(path.join(referencesDir, "recommendation-reliability.md"), "utf8");
 
-  assert.match(skill, /## Recommendation Reliability/);
   assert.match(skill, /references\/recommendation-reliability\.md/);
-  assert.match(skill, /Before non-trivial recommendations/);
-  assert.match(skill, /second-sample pass/);
-  assert.match(skill, /Stable checks stay hidden/);
-  assert.match(skill, /second-sample check/);
-  assert.match(skill, /Decision\s+Roundtable/);
-  assert.match(skill, /default 3 independent perspectives, maximum 5/);
-  assert.match(skill, /Do not reveal raw chain-of-thought/);
+  assert.match(method, /For non-trivial recommendations, read\s+`recommendation-reliability\.md`/);
+  assert.match(method, /second-sample pass/);
 
   assert.match(protocol, /## Recommendation Reliability Check/);
   assert.match(protocol, /Stable reliability checks stay hidden/);
@@ -197,22 +179,32 @@ test("skill gates non-trivial recommendations through reliability checks", () =>
   assert.match(reliability, /Do not reveal raw chain-of-thought/);
 });
 
-test("skill supports confirmed self-growing project context docs", () => {
+test("skill supports grill-with-docs style project context docs", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
+  const contextDocs = fs.readFileSync(path.join(referencesDir, "project-context-docs.md"), "utf8");
 
-  assert.match(skill, /## Project Context Docs/);
-  assert.match(skill, /check for existing domain context/);
-  assert.match(skill, /If `CONTEXT-MAP\.md` exists at the project root, read it first/);
-  assert.match(skill, /Treat `CONTEXT-MAP\.md` as an\s+active multi-context signal only when the file exists/);
-  assert.match(skill, /If no `CONTEXT-MAP\.md` exists but a root `CONTEXT\.md` exists/);
-  assert.match(skill, /If neither `CONTEXT-MAP\.md` nor `CONTEXT\.md` exists, continue normally/);
-  assert.match(skill, /do not suggest creating it/);
-  assert.match(skill, /Keep `CONTEXT\.md` glossary-only/);
-  assert.match(skill, /Treat ADRs as sparse decision records under `docs\/adr\/`/);
-  assert.match(skill, /hard to reverse, surprising\s+without context, and the result of a real trade-off/);
-  assert.match(skill, /Propose the\s+exact small addition and ask the user to confirm before editing any project\s+file/);
-  assert.match(skill, /Create or suggest `CONTEXT-MAP\.md` when the project does not already have one/);
+  assert.match(skill, /references\/project-context-docs\.md/);
+  assert.match(contextDocs, /## Finding Context Docs/);
+  assert.match(contextDocs, /If `CONTEXT-MAP\.md` exists at the project root, read it first/);
+  assert.match(contextDocs, /If no `CONTEXT-MAP\.md` exists but root `CONTEXT\.md` exists/);
+  assert.match(contextDocs, /If neither exists, continue normally/);
+  assert.match(contextDocs, /## Lazy File Creation/);
+  assert.match(contextDocs, /create one when the first domain term, boundary, or\s+relationship is resolved/);
+  assert.match(contextDocs, /create it only when the first ADR-worthy decision is\s+reached/);
+  assert.match(contextDocs, /Do not create or suggest `CONTEXT-MAP\.md`/);
+  assert.match(contextDocs, /Challenge user language against existing `CONTEXT\.md` terms/);
+  assert.match(contextDocs, /Sharpen vague language by proposing a precise canonical term/);
+  assert.match(contextDocs, /Cross-reference with code/);
+  assert.match(contextDocs, /`CONTEXT\.md` is a glossary only/);
+  assert.match(contextDocs, /must not contain implementation detail,\s+scratch notes, task prose, specs, plans, or memory dumps/);
+  assert.match(contextDocs, /update the applicable `CONTEXT\.md` inline/);
+  assert.match(contextDocs, /Offer an ADR only when all three are true/);
+  assert.match(contextDocs, /Hard to reverse/);
+  assert.match(contextDocs, /Surprising without context/);
+  assert.match(contextDocs, /Real trade-off/);
+  assert.match(contextDocs, /Do not create a separate session journal/);
 
-  assert.doesNotMatch(skill, /always create `CONTEXT-MAP\.md`/i);
-  assert.doesNotMatch(skill, /update `CONTEXT\.md` right there/i);
+  assert.doesNotMatch(contextDocs, /always create `CONTEXT-MAP\.md`/i);
+  assert.doesNotMatch(contextDocs, /ask the user to confirm before editing any project\s+file/i);
+  assert.doesNotMatch(contextDocs, /record the candidate in the brainstorming\s+journal/i);
 });
