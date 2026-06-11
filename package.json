@@ -1,6 +1,6 @@
 {
   "name": "brainstorming-only",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Standalone AI agent skill for brainstorming without specs, plans, commits, scaffolding, or implementation.",
   "license": "MIT",
   "type": "commonjs",

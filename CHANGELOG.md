@@ -7,6 +7,8 @@ and this project uses semantic versioning for npm releases.
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-06-11
+
 ### Changed
 
 - Replaced the legacy local session journal persistence model with
