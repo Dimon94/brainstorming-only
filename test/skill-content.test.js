@@ -142,6 +142,61 @@ test("skill keeps external calibration conditional, private, and premise-focused
   assert.doesNotMatch(skill, /write a design document after external calibration/i);
 });
 
+test("skill gates non-trivial recommendations through reliability checks", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+  const protocol = fs.readFileSync(
+    path.join(
+      __dirname,
+      "..",
+      "brainstorming-only",
+      "references",
+      "user-choice-output-protocol.md"
+    ),
+    "utf8"
+  );
+  const reliability = fs.readFileSync(
+    path.join(
+      __dirname,
+      "..",
+      "brainstorming-only",
+      "references",
+      "recommendation-reliability.md"
+    ),
+    "utf8"
+  );
+
+  assert.match(skill, /## Recommendation Reliability/);
+  assert.match(skill, /references\/recommendation-reliability\.md/);
+  assert.match(skill, /Before non-trivial recommendations/);
+  assert.match(skill, /second-sample pass/);
+  assert.match(skill, /Stable checks stay hidden/);
+  assert.match(skill, /second-sample check/);
+  assert.match(skill, /Decision\s+Roundtable/);
+  assert.match(skill, /default 3 independent perspectives, maximum 5/);
+  assert.match(skill, /Do not reveal raw chain-of-thought/);
+
+  assert.match(protocol, /## Recommendation Reliability Check/);
+  assert.match(protocol, /Stable reliability checks stay hidden/);
+  assert.match(protocol, /Unstable checks must disclose a\s+short `second-sample check`/);
+  assert.match(protocol, /roundtable check/);
+  assert.match(protocol, /Never expose raw chain-of-thought/);
+
+  assert.match(reliability, /# Recommendation Reliability/);
+  assert.match(reliability, /## Trigger/);
+  assert.match(reliability, /## Second-Sample Pass/);
+  assert.match(reliability, /## Output Rule/);
+  assert.match(reliability, /## Decision Roundtable/);
+  assert.match(reliability, /not a fourth\s+brainstorming posture/);
+  assert.match(reliability, /Use 3 independent perspectives by default and at most 5/);
+  assert.match(reliability, /The main assistant acts as judge/);
+  assert.match(reliability, /Do not decide by vote/);
+  assert.match(reliability, /## External Calibration Seat/);
+  assert.match(reliability, /optional roundtable seat, not a default seat/);
+  assert.match(reliability, /privacy gate/);
+  assert.match(reliability, /Do not search for project names, company\s+names, proprietary concepts, customer names, or sensitive details/);
+  assert.match(reliability, /Do not reveal raw chain-of-thought/);
+});
+
 test("skill supports confirmed self-growing project context docs", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
 

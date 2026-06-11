@@ -7,6 +7,7 @@ Use for posture selection, premise approval, approach selection, scope trade-off
 ## Contents
 
 - Decision Brief
+- Recommendation Reliability Check
 - Blocking Choices And Terminal Options
 - Strict Self-Check
 - Pros / Cons Quality Bar
@@ -26,7 +27,21 @@ Prepare this brief before choosing the host output format:
 - 2-3 mutually exclusive options.
 - For each option: label, upside, cost/risk, and when it fits.
 - Completeness note when options differ by coverage, or "options differ in kind" when coverage is not comparable.
+- Reliability note for non-trivial recommendations: stable `second-sample pass`,
+  disclosed `second-sample check`, or `Decision Roundtable`.
 - Net impact: what the selected option changes downstream.
+
+## Recommendation Reliability Check
+
+Before presenting a non-trivial recommendation, follow
+`recommendation-reliability.md`. Stable reliability checks stay hidden and the
+option set shows only the final recommendation. Unstable checks must disclose a
+short `second-sample check` before the option set. High-complexity decisions may
+use `Decision Roundtable`; if disagreement affects the final recommendation,
+disclose a compressed `roundtable check`.
+
+Never expose raw chain-of-thought. The visible output is a decision trace
+summary: recommendation, disagreement source, confidence change, and final move.
 
 ## Blocking Choices And Terminal Options
 
@@ -45,6 +60,7 @@ Before calling a structured choice tool or emitting fallback text for a blocking
 - The options are mutually exclusive and cover the realistic paths.
 - The recommended option is first for Codex and marked `(Recommended)` or `(recommended)` everywhere else.
 - The recommendation has a concrete reason, not "best balance" without saying what is being balanced.
+- Non-trivial recommendations have passed a stable `second-sample pass` or disclose the `second-sample check` / `roundtable check` that changed the recommendation or confidence.
 - Stakes are explicit: what becomes worse if the user picks wrong.
 - Completeness is scored only when coverage differs; otherwise use the kind-note.
 - Pros/cons meet the quality bar below.

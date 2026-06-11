@@ -216,6 +216,26 @@ Use these pressure tests when they fit:
 - If an option only sounds good because a hard part is unnamed, name that hard
   part directly.
 
+## Recommendation Reliability
+
+Before non-trivial recommendations, run the reliability check in
+`references/recommendation-reliability.md`. Non-trivial means the recommendation
+materially affects architecture boundaries, product direction, workflow shape,
+pricing or positioning, data models, long-term maintenance, team process, or
+other hard-to-reverse choices.
+
+Use an internal `second-sample pass` before converging. Re-evaluate the
+recommendation from a different named perspective, then compare it with the
+first recommendation. Stable checks stay hidden and the response gives only the
+final recommendation. Unstable checks must show a short `second-sample check`
+that names the disagreement source and final move.
+
+For high-complexity non-trivial recommendations, upgrade to `Decision
+Roundtable`: default 3 independent perspectives, maximum 5. External
+calibration is an optional roundtable seat only after the privacy gate in
+**External calibration**. Do not reveal raw chain-of-thought; expose only a
+decision trace summary.
+
 ## Workflow
 
 1. **Frame the topic**
@@ -267,6 +287,7 @@ Use these pressure tests when they fit:
 6. **Generate options**
    - Offer 2-3 distinct approaches, concepts, or directions.
    - Make the options meaningfully different, not cosmetic variants.
+   - For non-trivial recommendations, apply **Recommendation Reliability** before deciding which option wins.
    - Lead with the recommended option when there is enough evidence to recommend one.
    - Keep meaningful alternatives in the same A/B/C option format whether the choice is blocking or terminal.
    - Every option set must include exactly one recommended option and a concrete reason for that recommendation.
@@ -287,6 +308,7 @@ Use these pressure tests when they fit:
 
 8. **Converge**
    - Do not converge directly from the user's preferred answer. First state the cold-water pass, then either revise the direction, ask a blocking question, or explain why the direction survives.
+   - For non-trivial recommendations, converge only after a stable `second-sample pass` or a disclosed `second-sample check`.
    - Summarize the strongest direction and the reason it wins.
    - Preserve meaningful unresolved paths as A/B/C options when they would help the user continue the discussion later.
    - Capture open questions separately from decisions.
@@ -319,6 +341,7 @@ Use these moves selectively. Do not run every move mechanically.
 - **Language sharpening:** Replace vague or overloaded words with precise terms. If two terms sound similar but imply different decisions, separate them.
 - **Scenario probe:** Test an idea with a concrete example, edge case, or failure case instead of debating it abstractly.
 - **Radical option split:** Force options to differ by strategy, constraint, user, architecture, or risk profile. Reject near-duplicates.
+- **Recommendation reliability:** For non-trivial recommendations, run a `second-sample pass`; for high-complexity choices, escalate to `Decision Roundtable`.
 - **One-question prototype framing:** If the user wants to try something, identify the single question the prototype would answer, but do not build it in this skill.
 - **Evidence over interrogation:** If local context can answer a question cheaply, inspect it. Ask the user only for judgments, preferences, constraints, or missing facts.
 
