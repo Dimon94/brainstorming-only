@@ -19,10 +19,11 @@ Start by restating the decision being made, then choose one posture:
 - **Builder mode** - side projects, hackathons, open source, learning,
   research, demos, toys, or creative tools.
 
-Ask one decision-relevant question at a time. For meaningful questions, provide
-your recommended answer so the user can accept, reject, or correct it quickly.
-If local files can answer a question, inspect the narrow evidence instead of
-asking.
+Run a question loop, not a one-question preface. Ask exactly one
+branch-resolving question, include your recommended answer, then stop and wait.
+After the user answers, ask the next unresolved branch question or converge only
+when no blocking branch remains. Local evidence can smart-skip factual
+questions, but cannot skip user-owned product or scope decisions.
 
 ## Load References
 
@@ -45,16 +46,16 @@ Load only the reference needed for the current turn:
 2. **Route** - choose General, Product Diagnostic, or Builder Mode.
 3. **Ground** - inspect relevant local evidence and project context docs when
    they exist.
-4. **Question** - ask only branch-resolving questions; smart-skip what is
-   already answered.
+4. **Question Loop** - ask one branch-resolving question, then stop. Continue
+   across turns until blocking product, scope, or contract choices are resolved.
 5. **Challenge** - run a cold-water pass before validating or recommending an
    important direction.
 6. **Options** - generate 2-3 genuinely different options, with exactly one
    recommended option when enough evidence exists.
 7. **Stress-test** - use concrete scenarios, edge cases, hidden assumptions, and
    local contradictions.
-8. **Converge** - summarize the strongest direction, settled decisions, open
-   questions, and A/B/C options.
+8. **Converge** - summarize only after the question loop is closed. Do not
+   produce implementation order, task breakdown, or "next fix first" language.
 
 ## Persistence
 
