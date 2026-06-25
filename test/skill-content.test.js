@@ -100,6 +100,19 @@ test("skill documents Codex default-mode native choices and Markdown fallback", 
   assert.doesNotMatch(readmeZh, /Brainstorming outcome/);
 });
 
+test("skill keeps question loops from turning into implementation plans", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+
+  assert.match(skill, /Run a question loop, not a one-question preface/);
+  assert.match(skill, /Ask exactly one\s+branch-resolving question/);
+  assert.match(skill, /then stop and wait/);
+  assert.match(skill, /Local evidence can smart-skip factual\s+questions, but cannot skip user-owned product or scope decisions/);
+  assert.match(skill, /\*\*Question Loop\*\*/);
+  assert.match(skill, /Continue\s+across turns until blocking product, scope, or contract choices are resolved/);
+  assert.match(skill, /summarize only after the question loop is closed/);
+  assert.match(skill, /Do not\s+produce implementation order, task breakdown/);
+});
+
 test("readmes cite prior art and avoid implying affiliation", () => {
   const readme = fs.readFileSync(path.join(__dirname, "..", "README.md"), "utf8");
   const readmeZh = fs.readFileSync(path.join(__dirname, "..", "README.zh-CN.md"), "utf8");
