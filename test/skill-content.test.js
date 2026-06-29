@@ -6,14 +6,14 @@ const test = require("node:test");
 const skillPath = path.join(__dirname, "..", "brainstorming-only", "SKILL.md");
 const referencesDir = path.join(__dirname, "..", "brainstorming-only", "references");
 
-test("skill follows write-a-skill progressive disclosure structure", () => {
+test("skill follows writing-great-skills progressive disclosure structure", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
   const lineCount = skill.trimEnd().split("\n").length;
   const description = skill.match(/description: "([^"]+)"/)[1];
 
   assert.ok(lineCount <= 100, `SKILL.md should stay under 100 lines, got ${lineCount}`);
   assert.ok(description.length <= 1024);
-  assert.match(description, /^Facilitates standalone brainstorming/);
+  assert.match(description, /^Brainstorming-only for standalone ideation/);
   assert.match(description, /Use when/);
   assert.match(skill, /## Quick Start/);
   assert.match(skill, /## Load References/);
@@ -21,6 +21,7 @@ test("skill follows write-a-skill progressive disclosure structure", () => {
   assert.match(skill, /references\/project-context-docs\.md/);
   assert.match(skill, /references\/recommendation-reliability\.md/);
   assert.match(skill, /references\/user-choice-output-protocol\.md/);
+  assert.match(skill, /Done when/);
   assert.doesNotMatch(skill, /## Adversarial Clarity/);
   assert.doesNotMatch(skill, /## Product Diagnostic Posture/);
 });
@@ -103,14 +104,14 @@ test("skill documents Codex default-mode native choices and Markdown fallback", 
 test("skill keeps question loops from turning into implementation plans", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
 
-  assert.match(skill, /Run a question loop, not a one-question preface/);
+  assert.match(skill, /Run the question loop, not a one-question preface/);
   assert.match(skill, /Ask exactly one\s+branch-resolving question/);
   assert.match(skill, /then stop and wait/);
   assert.match(skill, /Local evidence can smart-skip factual\s+questions, but cannot skip user-owned product or scope decisions/);
   assert.match(skill, /\*\*Question Loop\*\*/);
-  assert.match(skill, /Continue\s+across turns until blocking product, scope, or contract choices are resolved/);
+  assert.match(skill, /Done across turns when no blocking product, scope, or\s+contract choice remains/);
   assert.match(skill, /summarize only after the question loop is closed/);
-  assert.match(skill, /Do not\s+produce implementation order, task breakdown/);
+  assert.match(skill, /with no implementation order,\s+task breakdown/);
 });
 
 test("readmes cite prior art and avoid implying affiliation", () => {

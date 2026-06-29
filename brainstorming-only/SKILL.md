@@ -1,13 +1,13 @@
 ---
 name: brainstorming-only
-description: "Facilitates standalone brainstorming for shaping ideas, product directions, workflows, designs, and technical choices without starting implementation. Use when the user asks for ideation, product diagnostics, builder-mode riffing, decision-tree questioning, premise challenge, trade-off analysis, structured option selection, or a decision summary before specs, plans, scaffolds, commits, PRs, or code changes."
+description: "Brainstorming-only for standalone ideation and decision shaping without implementation. Use when the user asks for brainstorming, product diagnostics, builder-mode exploration, premise challenge, trade-off comparison, structured option selection, or a pre-spec decision summary."
 ---
 
 # Brainstorming-Only
 
 ## Quick Start
 
-Use this skill to help the user think clearly before downstream work exists.
+Use this skill when the user needs thinking before downstream work exists.
 The output is discussion, options, decisions, and a concise summary.
 
 Start by restating the decision being made, then choose one posture:
@@ -19,7 +19,7 @@ Start by restating the decision being made, then choose one posture:
 - **Builder mode** - side projects, hackathons, open source, learning,
   research, demos, toys, or creative tools.
 
-Run a question loop, not a one-question preface. Ask exactly one
+Run the question loop, not a one-question preface. Ask exactly one
 branch-resolving question, include your recommended answer, then stop and wait.
 After the user answers, ask the next unresolved branch question or converge only
 when no blocking branch remains. Local evidence can smart-skip factual
@@ -42,20 +42,28 @@ Load only the reference needed for the current turn:
 
 ## Core Workflow
 
-1. **Frame** - name the goal, actors, constraints, and upstream decision.
-2. **Route** - choose General, Product Diagnostic, or Builder Mode.
-3. **Ground** - inspect relevant local evidence and project context docs when
-   they exist.
-4. **Question Loop** - ask one branch-resolving question, then stop. Continue
-   across turns until blocking product, scope, or contract choices are resolved.
+1. **Frame** - name the goal, actors, constraints, and upstream decision. Done
+   when the current decision can be stated in one sentence.
+2. **Route** - choose General, Product Diagnostic, or Builder Mode. Done when
+   the active posture and reason are explicit.
+3. **Ground** - inspect only local evidence and project context docs that can
+   answer factual blockers. Done when factual blockers are answered or left as
+   user-owned choices.
+4. **Question Loop** - ask one branch-resolving question with your recommended
+   answer, then stop. Done across turns when no blocking product, scope, or
+   contract choice remains.
 5. **Challenge** - run a cold-water pass before validating or recommending an
-   important direction.
+   important direction. Done when the strongest failure mode or hidden
+   assumption is named.
 6. **Options** - generate 2-3 genuinely different options, with exactly one
-   recommended option when enough evidence exists.
+   recommended option when enough evidence exists. Done when the options differ
+   by strategy, constraint, user, architecture, or risk profile.
 7. **Stress-test** - use concrete scenarios, edge cases, hidden assumptions, and
-   local contradictions.
-8. **Converge** - summarize only after the question loop is closed. Do not
-   produce implementation order, task breakdown, or "next fix first" language.
+   local contradictions. Done when conflicts that could change the
+   recommendation are surfaced.
+8. **Converge** - summarize only after the question loop is closed. Done when
+   settled decisions and open questions are clear, with no implementation order,
+   task breakdown, or "next fix first" language.
 
 ## Persistence
 
