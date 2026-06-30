@@ -1,24 +1,30 @@
 # User Choice Output Protocol
 
-Use this reference when a brainstorming session reaches a user-facing option set. Host-native choice UI is preferred over prose for blocking pauses. Text blocks are fallback only.
+Use this reference as the **Choice Output Adapter** when upstream brainstorming
+flow has already prepared a user-facing option set. Host-native choice UI is
+preferred over prose for blocking pauses. Text blocks are fallback only.
 
-Use for posture selection, premise approval, approach selection, scope trade-offs, terminal convergence, and any choice that must be resolved before the rest of the brainstorming session can continue. Do not use for every lightweight clarification.
+Use for rendering posture selection, premise approval, approach selection, scope
+trade-offs, terminal convergence, and any choice that must be resolved before
+the rest of the brainstorming session can continue.
+
+Guardrail: this adapter must not decide posture, invent recommendations, infer
+whether a choice is blocking, and must not run recommendation reliability.
 
 ## Contents
 
-- Decision Brief
-- Recommendation Reliability Check
+- Choice Packet Input
+- Choice Packet Validation
 - Blocking Choices And Terminal Options
-- Strict Self-Check
 - Pros / Cons Quality Bar
 - Codex Host Format
 - Claude Code MCP Elicitation
 - gstack AskUserQuestion Format
 - Fallback Text
 
-## Decision Brief
+## Choice Packet Input
 
-Prepare this brief before choosing the host output format:
+Upstream flow prepares a `Choice Packet Input` before calling this adapter:
 
 - `D<N>` number and short title.
 - One-sentence question.
@@ -26,22 +32,32 @@ Prepare this brief before choosing the host output format:
 - Recommendation and why.
 - 2-3 mutually exclusive options.
 - For each option: label, upside, cost/risk, and when it fits.
+- `Choice Packet Intent`: `blocking` or `terminal`.
 - Completeness note when options differ by coverage, or "options differ in kind" when coverage is not comparable.
-- Reliability note for non-trivial recommendations: stable `second-sample pass`,
-  disclosed `second-sample check`, or `Decision Roundtable`.
+- Optional `Reliability Note`: visible `second-sample check` or `roundtable
+  check` text already chosen by upstream recommendation reliability. The adapter
+  must render it only when it is present in the packet and must not run
+  recommendation reliability.
 - Net impact: what the selected option changes downstream.
 
-## Recommendation Reliability Check
+## Choice Packet Validation
 
-Before presenting a non-trivial recommendation, follow
-`recommendation-reliability.md`. Stable reliability checks stay hidden and the
-option set shows only the final recommendation. Unstable checks must disclose a
-short `second-sample check` before the option set. High-complexity decisions may
-use `Decision Roundtable`; if disagreement affects the final recommendation,
-disclose a compressed `roundtable check`.
+Before choosing a host renderer or emitting fallback text, validate the packet
+fail-closed:
 
-Never expose raw chain-of-thought. The visible output is a decision trace
-summary: recommendation, disagreement source, confidence change, and final move.
+- `D<N>` title exists and increments from the previous decision.
+- The question asks one decision, not multiple hidden decisions.
+- The options are mutually exclusive and cover the realistic paths.
+- Exactly one option is recommended.
+- The recommendation has a concrete reason, not "best balance" without saying what is being balanced.
+- `Choice Packet Intent` is explicitly `blocking` or `terminal`.
+- Stakes are explicit: what becomes worse if the user picks wrong.
+- Completeness is scored only when coverage differs; otherwise use the kind-note.
+- Pros/cons meet the quality bar below.
+- Any `Reliability Note` is already present as visible summary text, not raw chain-of-thought.
+
+If validation fails, do not repair the packet locally. Ask upstream reasoning to
+supply a complete packet.
 
 ## Blocking Choices And Terminal Options
 
@@ -50,23 +66,6 @@ A structured choice is a blocking pause, not the only way to show options. Use i
 Use terminal A/B/C options as the default convergence shape when the assistant can recommend a direction and no blocking choice remains. The same visible option format appears in blocking and terminal cases; only the final instruction differs.
 
 After using a native choice tool, MCP elicitation, gstack `AskUserQuestion`, or fallback A/B/C text for a blocking pause, stop immediately and wait. Do not append a decision summary or recommendation recap in the same turn.
-
-## Strict Self-Check
-
-Before calling a structured choice tool or emitting fallback text for a blocking pause, verify:
-
-- `D<N>` title exists and increments from the previous decision.
-- The question asks one decision, not multiple hidden decisions.
-- The options are mutually exclusive and cover the realistic paths.
-- The recommended option is first for Codex and marked `(Recommended)` or `(recommended)` everywhere else.
-- The recommendation has a concrete reason, not "best balance" without saying what is being balanced.
-- Non-trivial recommendations have passed a stable `second-sample pass` or disclose the `second-sample check` / `roundtable check` that changed the recommendation or confidence.
-- Stakes are explicit: what becomes worse if the user picks wrong.
-- Completeness is scored only when coverage differs; otherwise use the kind-note.
-- Pros/cons meet the quality bar below.
-- The response stops after asking and waits for the user's answer.
-
-If any item fails, rewrite the question before asking it.
 
 ## Pros / Cons Quality Bar
 
@@ -173,7 +172,9 @@ If a Claude Code runtime claims to support skills but does not expose MCP elicit
 
 ## gstack AskUserQuestion Format
 
-When a gstack-style host exposes a real `AskUserQuestion` tool, send the decision brief as a tool call, not prose. Do not simulate this by writing Markdown.
+When a gstack-style host exposes a real `AskUserQuestion` tool, render the
+Choice Packet Input as a tool call, not prose. Do not simulate this by writing
+Markdown.
 
 Use this content shape inside the tool:
 

@@ -7,6 +7,12 @@ and this project uses semantic versioning for npm releases.
 
 ## [Unreleased]
 
+### Changed
+
+- Narrowed `user-choice-output-protocol.md` into a Choice Output Adapter: it now
+  renders already-decided choice packets and no longer owns recommendation
+  reliability or blocking-vs-terminal flow decisions.
+
 ## [0.1.5] - 2026-06-11
 
 ### Changed

@@ -5,6 +5,14 @@ const test = require("node:test");
 
 const skillPath = path.join(__dirname, "..", "brainstorming-only", "SKILL.md");
 const referencesDir = path.join(__dirname, "..", "brainstorming-only", "references");
+const contextPath = path.join(__dirname, "..", "CONTEXT.md");
+const choiceAdapterAdrPath = path.join(
+  __dirname,
+  "..",
+  "docs",
+  "adr",
+  "0001-choice-output-adapter.md",
+);
 
 test("skill follows writing-great-skills progressive disclosure structure", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
@@ -101,6 +109,32 @@ test("skill documents Codex default-mode native choices and Markdown fallback", 
   assert.doesNotMatch(readmeZh, /Brainstorming outcome/);
 });
 
+test("choice protocol is a rendering adapter for decided choice packets", () => {
+  const protocol = fs.readFileSync(path.join(referencesDir, "user-choice-output-protocol.md"), "utf8");
+  const context = fs.readFileSync(contextPath, "utf8");
+  const adr = fs.readFileSync(choiceAdapterAdrPath, "utf8");
+
+  assert.match(protocol, /Choice Output Adapter/);
+  assert.match(protocol, /Choice Packet Input/);
+  assert.match(protocol, /Choice Packet Intent/);
+  assert.match(protocol, /Choice Packet Validation/);
+  assert.match(protocol, /Reliability Note/);
+  assert.match(protocol, /must not decide posture/);
+  assert.match(protocol, /must not run recommendation reliability/);
+  assert.match(protocol, /host renderer/);
+  assert.doesNotMatch(protocol, /## Recommendation Reliability Check/);
+  assert.doesNotMatch(protocol, /Before presenting a non-trivial recommendation, follow\s+`recommendation-reliability\.md`/);
+
+  assert.match(context, /\*\*Choice Output Adapter\*\*/);
+  assert.match(context, /\*\*Choice Packet Input\*\*/);
+  assert.match(context, /\*\*Choice Packet Validation\*\*/);
+  assert.match(context, /\*\*Choice Packet Intent\*\*/);
+  assert.match(context, /\*\*Reliability Note\*\*/);
+  assert.match(context, /\*\*Choice Host Selection\*\*/);
+  assert.match(adr, /renders decided choice packets/);
+  assert.match(adr, /keeps the choice interface deep/);
+});
+
 test("skill keeps question loops from turning into implementation plans", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
 
@@ -171,11 +205,10 @@ test("skill gates non-trivial recommendations through reliability checks", () =>
   assert.match(method, /For non-trivial recommendations, read\s+`recommendation-reliability\.md`/);
   assert.match(method, /second-sample pass/);
 
-  assert.match(protocol, /## Recommendation Reliability Check/);
-  assert.match(protocol, /Stable reliability checks stay hidden/);
-  assert.match(protocol, /Unstable checks must disclose a\s+short `second-sample check`/);
-  assert.match(protocol, /roundtable check/);
-  assert.match(protocol, /Never expose raw chain-of-thought/);
+  assert.match(protocol, /Reliability Note/);
+  assert.match(protocol, /render it only when it is present/);
+  assert.match(protocol, /must not run recommendation reliability/);
+  assert.doesNotMatch(protocol, /## Recommendation Reliability Check/);
 
   assert.match(reliability, /# Recommendation Reliability/);
   assert.match(reliability, /## Trigger/);

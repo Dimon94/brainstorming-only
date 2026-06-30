@@ -93,6 +93,8 @@ Use $brainstorming-only to compare these product directions and help me choose o
 
 这个 skill 使用同一种可见选项格式处理“阻塞选择暂停”和“最终收敛”。如果下一步推理必须等用户选一个方向，才使用宿主原生选择 UI；如果推荐方向已经清楚，最终回复仍然使用 A/B/C 选项，标出一个推荐项，并说明推荐理由。
 
+choice protocol 只做宿主渲染 adapter。上游 brainstorming flow 先决定推荐项、reliability note，以及这是阻塞选择还是最终收敛，然后 protocol 才负责渲染。
+
 对 Codex 的阻塞选择来说，就是在当前 turn 的工具列表里有 `request_user_input` 时使用它；Codex Default mode 可以通过 `~/.codex/config.toml` 开启这个工具：
 
 ```toml
@@ -108,7 +110,7 @@ default_mode_request_user_input = true
 请帮我在 ~/.codex/config.toml 里开启 Codex Default-mode 选项弹窗：添加 [features] default_mode_request_user_input = true，并保留现有配置。
 ```
 
-详细宿主映射放在 `brainstorming-only/references/user-choice-output-protocol.md`。
+详细选项渲染 contract 和宿主映射放在 `brainstorming-only/references/user-choice-output-protocol.md`。
 
 ## 项目上下文文档
 

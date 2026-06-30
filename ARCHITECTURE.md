@@ -64,6 +64,10 @@ are separate requests after the brainstorming session ends.
 The choice protocol lives in
 `brainstorming-only/references/user-choice-output-protocol.md`.
 
+It is a host-rendering adapter for already-decided choice packets. Session flow,
+recommendation reliability, and blocking-vs-terminal intent stay upstream of
+the protocol.
+
 The skill prefers host-native choice UI:
 
 - Codex: `request_user_input` when available in the current tool list.

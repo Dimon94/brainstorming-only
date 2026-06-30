@@ -116,6 +116,10 @@ uses the host's native choice UI when available. If the recommendation is alread
 clear, the final response still uses A/B/C options, marks one option as
 recommended, and explains why that recommendation wins.
 
+The choice protocol is only a host-rendering adapter. Upstream brainstorming
+flow decides the recommendation, reliability note, and whether the choice is a
+blocking pause or terminal convergence before the protocol renders it.
+
 For Codex blocking choices, that means `request_user_input` when it is listed in
 the current turn's tools. Codex can expose that tool in Default mode when this is
 configured in `~/.codex/config.toml`:
@@ -137,7 +141,7 @@ To enable the Codex setting directly, send Codex this prompt:
 Please enable Codex Default-mode choice popups by adding [features] default_mode_request_user_input = true to ~/.codex/config.toml, preserving all existing settings.
 ```
 
-The detailed host mapping lives in
+The detailed choice rendering contract and host mapping live in
 `brainstorming-only/references/user-choice-output-protocol.md`.
 
 ## Privacy And Local Data
