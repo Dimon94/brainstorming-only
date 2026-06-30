@@ -71,8 +71,9 @@ Durable knowledge persists only through project context docs. Do not create a
 separate session journal, hidden local persistence directory, checkpoint file,
 recovery cache, or quote log.
 
-When local project brainstorming resolves a durable term, boundary,
-relationship, or ADR-worthy decision, follow
+Project context persistence is a side effect after a confirmed durable fact. It
+does not control the question loop. When local brainstorming resolves a durable
+term, boundary, relationship, or ADR-worthy decision, follow
 `references/project-context-docs.md`.
 
 ## Choices

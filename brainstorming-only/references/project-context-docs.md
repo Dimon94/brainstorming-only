@@ -6,6 +6,7 @@ terms, boundaries, relationships, or hard-to-reverse decisions.
 ## Contents
 
 - Persistence boundary
+- Persistence adapter contract
 - Finding context docs
 - Lazy file creation
 - During the session
@@ -22,6 +23,15 @@ Durable knowledge persists only through project-owned context docs:
 
 Do not create a separate session journal, hidden local persistence directory,
 checkpoint file, recovery cache, quote log, or `~/.brainstorming` data.
+
+## Persistence Adapter Contract
+
+- Trigger: run only after the session has confirmed a durable term,
+  relationship, or ADR-worthy decision.
+- Input: confirmed facts only, not candidate facts.
+- Output: `persisted`, `offered`, `skipped`, or `failed`. Only `failed` blocks the brainstorming session.
+- Non-goals: do not decide whether the question loop continues, judge candidate
+  facts, or defer confirmed inline updates.
 
 ## Finding Context Docs
 

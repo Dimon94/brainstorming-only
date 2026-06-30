@@ -198,6 +198,15 @@ test("skill supports grill-with-docs style project context docs", () => {
   const contextDocs = fs.readFileSync(path.join(referencesDir, "project-context-docs.md"), "utf8");
 
   assert.match(skill, /references\/project-context-docs\.md/);
+  assert.match(skill, /Project context persistence is a side effect after a confirmed durable fact/);
+  assert.match(skill, /does not control the question loop/);
+  assert.match(contextDocs, /## Persistence Adapter Contract/);
+  assert.match(contextDocs, /Trigger:/);
+  assert.match(contextDocs, /Input:/);
+  assert.match(contextDocs, /Output:/);
+  assert.match(contextDocs, /Non-goals:/);
+  assert.match(contextDocs, /confirmed facts only, not candidate facts/);
+  assert.match(contextDocs, /Only `failed` blocks the brainstorming session/);
   assert.match(contextDocs, /## Finding Context Docs/);
   assert.match(contextDocs, /If `CONTEXT-MAP\.md` exists at the project root, read it first/);
   assert.match(contextDocs, /If no `CONTEXT-MAP\.md` exists but root `CONTEXT\.md` exists/);
@@ -221,4 +230,6 @@ test("skill supports grill-with-docs style project context docs", () => {
   assert.doesNotMatch(contextDocs, /always create `CONTEXT-MAP\.md`/i);
   assert.doesNotMatch(contextDocs, /ask the user to confirm before editing any project\s+file/i);
   assert.doesNotMatch(contextDocs, /record the candidate in the brainstorming\s+journal/i);
+  assert.doesNotMatch(contextDocs, /batch confirmed updates at the end/i);
+  assert.doesNotMatch(contextDocs, /candidate facts decide persistence/i);
 });
