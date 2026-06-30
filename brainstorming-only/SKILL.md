@@ -10,7 +10,12 @@ description: "Brainstorming-only for standalone ideation and decision shaping wi
 Use this skill when the user needs thinking before downstream work exists.
 The output is discussion, options, decisions, and a concise summary.
 
-Start by restating the decision being made, then choose one posture:
+`SKILL.md` is the Session Orchestrator. It owns the Session State
+Machine: `Frame -> Route -> Ground -> DecideNext -> Respond`. Reference files
+do not decide workflow transitions; they provide DecideNext Tactics, Choice
+Output Adapter rules, or Context Persistence Adapter rules.
+
+Start by restating the decision being made, then route to one posture:
 
 - **General brainstorming** - strategy, naming, technical direction, workflow,
   API, architecture, design direction, or ambiguous early thinking.
@@ -19,26 +24,24 @@ Start by restating the decision being made, then choose one posture:
 - **Builder mode** - side projects, hackathons, open source, learning,
   research, demos, toys, or creative tools.
 
-Run the question loop, not a one-question preface. Ask exactly one
-branch-resolving question, include your recommended answer, then stop and wait.
-After the user answers, ask the next unresolved branch question or converge only
-when no blocking branch remains. Local evidence can smart-skip factual
-questions, but cannot skip user-owned product or scope decisions.
+Run the question loop as a DecideNext Tactic, not a one-question preface. Ask
+exactly one branch-resolving question, include your recommended answer, then
+stop and wait when the Response Shape is `blocking pause`.
 
 ## Load References
 
 Load only the reference needed for the current turn:
 
-- `references/brainstorming-method.md` - detailed workflow, adversarial
-  clarity, posture routing, external calibration, question banks, technical
-  lens, and terminal output shape.
-- `references/project-context-docs.md` - local project glossary/ADR persistence.
-  Read before the first substantial answer when project context docs exist or
-  when the discussion may resolve durable project language.
-- `references/recommendation-reliability.md` - required before non-trivial
-  recommendations that affect hard-to-reverse choices.
-- `references/user-choice-output-protocol.md` - required before a blocking
-  structured choice.
+- `references/brainstorming-method.md` - DecideNext Tactics: adversarial
+  clarity, question banks, posture details, external calibration, and output
+  examples.
+- `references/project-context-docs.md` - Context Persistence Adapter rules.
+  Read before a substantial answer when project context docs exist or when a
+  settled decision may create durable project language.
+- `references/recommendation-reliability.md` - DecideNext Tactic for
+  non-trivial recommendations that affect hard-to-reverse choices.
+- `references/user-choice-output-protocol.md` - Choice Output Adapter rules for
+  rendering an already-decided `blocking pause` or `terminal convergence`.
 
 ## Core Workflow
 
@@ -47,23 +50,16 @@ Load only the reference needed for the current turn:
 2. **Route** - choose General, Product Diagnostic, or Builder Mode. Done when
    the active posture and reason are explicit.
 3. **Ground** - inspect only local evidence and project context docs that can
-   answer factual blockers. Done when factual blockers are answered or left as
-   user-owned choices.
-4. **Question Loop** - ask one branch-resolving question with your recommended
-   answer, then stop. Done across turns when no blocking product, scope, or
-   contract choice remains.
-5. **Challenge** - run a cold-water pass before validating or recommending an
-   important direction. Done when the strongest failure mode or hidden
-   assumption is named.
-6. **Options** - generate 2-3 genuinely different options, with exactly one
-   recommended option when enough evidence exists. Done when the options differ
-   by strategy, constraint, user, architecture, or risk profile.
-7. **Stress-test** - use concrete scenarios, edge cases, hidden assumptions, and
-   local contradictions. Done when conflicts that could change the
-   recommendation are surfaced.
-8. **Converge** - summarize only after the question loop is closed. Done when
-   settled decisions and open questions are clear, with no implementation order,
-   task breakdown, or "next fix first" language.
+   answer factual blockers. Local evidence can smart-skip factual questions, but
+   cannot skip user-owned product or scope decisions.
+4. **DecideNext** - choose the next Response Shape using DecideNext Tactics:
+   question loop, challenge, options, stress-test, recommendation reliability,
+   and external calibration. Done when the next shape is `blocking pause`,
+   `terminal convergence`, or `normal answer`.
+5. **Respond** - render exactly one Response Shape. `blocking pause` stops and
+   waits; `terminal convergence` summarizes settled decisions and open
+   questions; `normal answer` handles lightweight responses.
+   Response Shapes are: blocking pause, terminal convergence, or normal answer.
 
 ## Persistence
 
@@ -71,17 +67,19 @@ Durable knowledge persists only through project context docs. Do not create a
 separate session journal, hidden local persistence directory, checkpoint file,
 recovery cache, or quote log.
 
-Project context persistence is a side effect after a confirmed durable fact. It
-does not control the question loop. When local brainstorming resolves a durable
-term, boundary, relationship, or ADR-worthy decision, follow
+Project context persistence is a Context Persistence Adapter side effect after a
+confirmed durable fact. Run it after `DecideNext` has a settled decision and
+before `Respond` renders. It does not control the question loop. When local
+brainstorming resolves a durable term, boundary, relationship, or ADR-worthy
+decision, follow
 `references/project-context-docs.md`.
 
 ## Choices
 
 Use the same A/B/C option shape for terminal convergence and blocking pauses.
 Use host-native structured choice UI only when the user's selection is required
-before the next reasoning step is valid. Before doing that, read
-`references/user-choice-output-protocol.md`.
+before the next reasoning step is valid. The Session Orchestrator chooses the
+Response Shape before the Choice Output Adapter renders it.
 
 ## Boundaries
 

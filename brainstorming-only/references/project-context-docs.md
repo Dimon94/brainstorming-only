@@ -26,8 +26,8 @@ checkpoint file, recovery cache, quote log, or `~/.brainstorming` data.
 
 ## Persistence Adapter Contract
 
-- Trigger: run only after the session has confirmed a durable term,
-  relationship, or ADR-worthy decision.
+- Trigger: run only after `DecideNext` has produced a settled durable term,
+  relationship, or ADR-worthy decision, and before `Respond` renders.
 - Input: confirmed facts only, not candidate facts.
 - Output: `persisted`, `offered`, `skipped`, or `failed`. Only `failed` blocks the brainstorming session.
 - Non-goals: do not decide whether the question loop continues, judge candidate

@@ -34,6 +34,40 @@ test("skill follows writing-great-skills progressive disclosure structure", () =
   assert.doesNotMatch(skill, /## Product Diagnostic Posture/);
 });
 
+test("skill entrypoint owns the session orchestrator contract", () => {
+  const skill = fs.readFileSync(skillPath, "utf8");
+  const method = fs.readFileSync(path.join(referencesDir, "brainstorming-method.md"), "utf8");
+  const protocol = fs.readFileSync(path.join(referencesDir, "user-choice-output-protocol.md"), "utf8");
+  const contextDocs = fs.readFileSync(path.join(referencesDir, "project-context-docs.md"), "utf8");
+  const reliability = fs.readFileSync(path.join(referencesDir, "recommendation-reliability.md"), "utf8");
+
+  assert.match(skill, /Session Orchestrator/);
+  assert.match(skill, /Frame -> Route -> Ground -> DecideNext -> Respond/);
+  assert.match(skill, /\*\*DecideNext\*\*/);
+  assert.match(skill, /DecideNext Tactics/);
+  assert.match(skill, /question loop, challenge, options, stress-test, recommendation reliability,\s+and external calibration/);
+  assert.match(skill, /Response Shape/);
+  assert.match(skill, /blocking pause, terminal convergence, or normal answer/);
+  assert.match(skill, /Reference files\s+do not decide workflow transitions/);
+
+  assert.match(method, /DecideNext Tactics/);
+  assert.match(method, /not workflow states/);
+  assert.match(protocol, /Choice Output Adapter/);
+  assert.match(protocol, /renders an already-decided Response\s+Shape/);
+  assert.match(protocol, /does not decide whether the session stops or\s+continues/);
+  assert.match(contextDocs, /Persistence Adapter Contract/);
+  assert.match(reliability, /DecideNext Tactic/);
+  assert.match(reliability, /not a workflow state/);
+
+  assert.doesNotMatch(skill, /\*\*Question Loop\*\*/);
+  assert.doesNotMatch(skill, /\*\*Challenge\*\*/);
+  assert.doesNotMatch(skill, /\*\*Options\*\*/);
+  assert.doesNotMatch(skill, /\*\*Stress-test\*\*/);
+  assert.doesNotMatch(skill, /\*\*Converge\*\*/);
+  assert.doesNotMatch(method, /## Detailed Workflow/);
+  assert.doesNotMatch(protocol, /Before presenting a non-trivial recommendation, follow/);
+});
+
 test("method reference encodes adversarial brainstorming instead of cheap affirmation", () => {
   const method = fs.readFileSync(path.join(referencesDir, "brainstorming-method.md"), "utf8");
 
@@ -126,6 +160,7 @@ test("choice protocol is a rendering adapter for decided choice packets", () => 
   assert.doesNotMatch(protocol, /Before presenting a non-trivial recommendation, follow\s+`recommendation-reliability\.md`/);
 
   assert.match(context, /\*\*Choice Output Adapter\*\*/);
+  assert.equal((context.match(/\*\*Choice Output Adapter\*\*/g) || []).length, 1);
   assert.match(context, /\*\*Choice Packet Input\*\*/);
   assert.match(context, /\*\*Choice Packet Validation\*\*/);
   assert.match(context, /\*\*Choice Packet Intent\*\*/);
@@ -138,14 +173,15 @@ test("choice protocol is a rendering adapter for decided choice packets", () => 
 test("skill keeps question loops from turning into implementation plans", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
 
-  assert.match(skill, /Run the question loop, not a one-question preface/);
-  assert.match(skill, /Ask exactly one\s+branch-resolving question/);
-  assert.match(skill, /then stop and wait/);
-  assert.match(skill, /Local evidence can smart-skip factual\s+questions, but cannot skip user-owned product or scope decisions/);
-  assert.match(skill, /\*\*Question Loop\*\*/);
-  assert.match(skill, /Done across turns when no blocking product, scope, or\s+contract choice remains/);
-  assert.match(skill, /summarize only after the question loop is closed/);
-  assert.match(skill, /with no implementation order,\s+task breakdown/);
+  assert.match(skill, /Run the question loop as a DecideNext Tactic, not a one-question preface/);
+  assert.match(skill, /Ask\s+exactly one branch-resolving question/);
+  assert.match(skill, /then\s+stop and wait/);
+  assert.match(skill, /Local evidence can smart-skip factual\s+questions, but\s+cannot skip user-owned product or scope decisions/);
+  assert.match(skill, /\*\*DecideNext\*\*/);
+  assert.match(skill, /question loop, challenge, options, stress-test, recommendation reliability/);
+  assert.match(skill, /\*\*Respond\*\*/);
+  assert.match(skill, /blocking pause` stops and\s+waits/);
+  assert.match(skill, /terminal convergence` summarizes settled decisions and open\s+questions/);
 });
 
 test("readmes cite prior art and avoid implying affiliation", () => {
@@ -209,6 +245,12 @@ test("skill gates non-trivial recommendations through reliability checks", () =>
   assert.match(protocol, /render it only when it is present/);
   assert.match(protocol, /must not run recommendation reliability/);
   assert.doesNotMatch(protocol, /## Recommendation Reliability Check/);
+  assert.match(protocol, /## Reliability Disclosure/);
+  assert.match(protocol, /The Session Orchestrator must run recommendation reliability before invoking\s+this adapter/);
+  assert.match(protocol, /Stable reliability checks stay\s+hidden/);
+  assert.match(protocol, /render that\s+short disclosure before the option set/);
+  assert.match(protocol, /roundtable check/);
+  assert.match(protocol, /Never expose raw chain-of-thought/);
 
   assert.match(reliability, /# Recommendation Reliability/);
   assert.match(reliability, /## Trigger/);
@@ -229,12 +271,15 @@ test("skill gates non-trivial recommendations through reliability checks", () =>
 test("skill supports grill-with-docs style project context docs", () => {
   const skill = fs.readFileSync(skillPath, "utf8");
   const contextDocs = fs.readFileSync(path.join(referencesDir, "project-context-docs.md"), "utf8");
+  const context = fs.readFileSync(contextPath, "utf8");
 
   assert.match(skill, /references\/project-context-docs\.md/);
-  assert.match(skill, /Project context persistence is a side effect after a confirmed durable fact/);
+  assert.match(skill, /Project context persistence is a Context Persistence Adapter side effect after a\s+confirmed durable fact/);
+  assert.match(skill, /Run it after `DecideNext` has a settled decision and\s+before `Respond` renders/);
   assert.match(skill, /does not control the question loop/);
   assert.match(contextDocs, /## Persistence Adapter Contract/);
   assert.match(contextDocs, /Trigger:/);
+  assert.match(contextDocs, /run only after `DecideNext` has produced a settled durable term,\s+relationship, or ADR-worthy decision, and before `Respond` renders/);
   assert.match(contextDocs, /Input:/);
   assert.match(contextDocs, /Output:/);
   assert.match(contextDocs, /Non-goals:/);
@@ -259,6 +304,8 @@ test("skill supports grill-with-docs style project context docs", () => {
   assert.match(contextDocs, /Surprising without context/);
   assert.match(contextDocs, /Real trade-off/);
   assert.match(contextDocs, /Do not create a separate session journal/);
+  assert.match(context, /\*\*Context Persistence Adapter\*\*/);
+  assert.doesNotMatch(context, /\*\*Project Context Persistence\*\*/);
 
   assert.doesNotMatch(contextDocs, /always create `CONTEXT-MAP\.md`/i);
   assert.doesNotMatch(contextDocs, /ask the user to confirm before editing any project\s+file/i);

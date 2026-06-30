@@ -1,20 +1,27 @@
 # User Choice Output Protocol
 
-Use this reference as the **Choice Output Adapter** when upstream brainstorming
-flow has already prepared a user-facing option set. Host-native choice UI is
-preferred over prose for blocking pauses. Text blocks are fallback only.
+Use this reference as the **Choice Output Adapter** when the Session
+Orchestrator has already chosen a `blocking pause` or `terminal convergence`
+Response Shape and upstream brainstorming flow has already prepared a
+user-facing option set. It renders an already-decided Response Shape for the
+current host. It does not decide whether the session stops or continues.
+Host-native choice UI is preferred over prose for blocking pauses. Text blocks
+are fallback only.
 
 Use for rendering posture selection, premise approval, approach selection, scope
 trade-offs, terminal convergence, and any choice that must be resolved before
-the rest of the brainstorming session can continue.
+the rest of the brainstorming session can continue. Do not use for every
+lightweight clarification.
 
 Guardrail: this adapter must not decide posture, invent recommendations, infer
-whether a choice is blocking, and must not run recommendation reliability.
+whether a choice is blocking, decide whether the session stops or continues, and
+must not run recommendation reliability.
 
 ## Contents
 
 - Choice Packet Input
 - Choice Packet Validation
+- Reliability Disclosure
 - Blocking Choices And Terminal Options
 - Pros / Cons Quality Bar
 - Codex Host Format
@@ -39,6 +46,17 @@ Upstream flow prepares a `Choice Packet Input` before calling this adapter:
   must render it only when it is present in the packet and must not run
   recommendation reliability.
 - Net impact: what the selected option changes downstream.
+
+## Reliability Disclosure
+
+The Session Orchestrator must run recommendation reliability before invoking
+this adapter for a non-trivial recommendation. Stable reliability checks stay
+hidden and the option set shows only the final recommendation. When the caller
+provides an unstable `second-sample check` or `roundtable check` as a
+`Reliability Note`, render that short disclosure before the option set.
+
+Never expose raw chain-of-thought. The visible output is a decision trace
+summary: recommendation, disagreement source, confidence change, and final move.
 
 ## Choice Packet Validation
 

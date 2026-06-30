@@ -4,6 +4,10 @@ Use this reference before making a non-trivial recommendation in a
 brainstorming session. The goal is to reduce decision noise without exposing
 raw chain-of-thought or turning the response into a meeting transcript.
 
+This is a DecideNext Tactic, not a workflow state. It returns a recommendation
+confidence signal or a blocking-question need to the Session Orchestrator; the
+orchestrator still chooses the Response Shape.
+
 ## Trigger
 
 A recommendation is non-trivial when a wrong answer would materially affect:

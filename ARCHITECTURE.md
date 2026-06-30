@@ -17,6 +17,9 @@ scripts/
   install.js
 test/
   skill-content.test.js
+docs/adr/
+  0001-choice-output-adapter.md
+  0002-skill-md-owns-session-orchestrator.md
 ```
 
 ## Install Flow
@@ -40,20 +43,24 @@ skill directories.
 
 ## Skill Contract
 
-`SKILL.md` is the concise runtime entry point. It keeps the agent in a
-discussion-only mode and routes detailed behavior into one-level reference
-files:
+`SKILL.md` is the concise runtime entry point and the Session Orchestrator. It
+keeps the agent in discussion-only mode and owns the five-state Session State
+Machine:
 
-- Frame the topic.
-- Choose a brainstorming posture.
-- Ask targeted decision questions.
-- Challenge premises.
-- Generate and stress-test options.
-- Converge only when no blocking choice remains.
+```text
+Frame -> Route -> Ground -> DecideNext -> Respond
+```
 
-Detailed brainstorming method, project-context persistence rules,
-recommendation reliability, and host-specific choice handling live under
-`brainstorming-only/references/`.
+Reference files do not own workflow transitions. They plug into the
+orchestrator as one-level capabilities:
+
+- `brainstorming-method.md` provides DecideNext tactics.
+- `recommendation-reliability.md` provides a DecideNext tactic for unstable
+  recommendations.
+- `user-choice-output-protocol.md` is the Choice Output Adapter for already
+  decided response shapes.
+- `project-context-docs.md` is the Context Persistence Adapter for confirmed
+  durable facts and ADR-worthy decisions.
 
 The hard boundary is deliberate: this skill does not start implementation,
 planning, scaffolding, commits, or PR work. If the user wants those steps, they

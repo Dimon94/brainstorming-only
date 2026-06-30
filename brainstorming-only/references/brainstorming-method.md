@@ -4,10 +4,14 @@ Read this when the conversation needs more than a light answer: product
 diagnosis, technical direction, external calibration, non-trivial option
 comparison, or terminal convergence.
 
+This file provides DecideNext Tactics. These are not workflow states; `SKILL.md`
+owns the Session State Machine and calls these tactics only after Frame, Route,
+and Ground are clear enough to choose the next Response Shape.
+
 ## Contents
 
 - Adversarial clarity
-- Detailed workflow
+- DecideNext tactic flow
 - External calibration
 - Core brainstorming moves
 - Mode routing
@@ -45,16 +49,18 @@ Useful pressure tests:
 - If an option sounds good only because a hard part is unnamed, name that hard
   part directly.
 
-## Detailed Workflow
+## DecideNext Tactic Flow
 
-1. **Frame the topic**
+Use these moves as tactics behind `DecideNext`, not as a second workflow.
+
+1. **Frame check**
    - Restate the user's goal in one or two sentences.
    - Name ambiguity directly.
    - If local context matters, inspect only the minimum evidence needed.
    - If the user starts from a detail, zoom out first: actors, surfaces,
      constraints, existing alternatives, and the real decision.
 
-2. **Choose the posture**
+2. **Route check**
    - Product Diagnostic for customers, revenue, adoption, sponsors, startups,
      internal products, or "worth building?" questions.
    - Builder Mode for side projects, hackathons, open source, learning,
@@ -64,7 +70,7 @@ Useful pressure tests:
    - If the posture choice would change the conversation and is not obvious,
      ask one structured choice question.
 
-3. **Ask targeted questions**
+3. **Question loop**
    - Ask one question at a time when the answer changes the direction.
    - Resolve upstream choices before downstream details.
    - For each non-trivial question, include your recommended answer and reason.
@@ -73,7 +79,7 @@ Useful pressure tests:
      then move to premise challenge and options unless external calibration is
      clearly needed.
 
-4. **Challenge the premises**
+4. **Challenge**
    - Ask whether this is the right problem or if a simpler framing exists.
    - Ask what happens if nothing changes.
    - Separate desired solution from the underlying job, pain, or decision.
@@ -84,7 +90,7 @@ Useful pressure tests:
    - For technical ideas, separate caller-facing contract from internal
      mechanism.
 
-5. **Generate options**
+5. **Options**
    - Offer 2-3 distinct approaches, concepts, or directions.
    - Make options meaningfully different, not cosmetic variants.
    - For non-trivial recommendations, read
@@ -96,7 +102,7 @@ Useful pressure tests:
      option, an ideal long-term option, and a creative/lateral option when that
      split fits.
 
-6. **Stress-test the options**
+6. **Stress-test**
    - Check assumptions, failure modes, hidden complexity, audience fit, and
      constraints.
    - Use concrete scenarios and edge cases to expose vague or conflicting ideas.
@@ -106,7 +112,7 @@ Useful pressure tests:
      and ask which source should win.
    - Remove ideas that do not serve the user's stated goal.
 
-7. **Converge**
+7. **Convergence check**
    - Do not converge directly from the user's preferred answer.
    - First state the cold-water pass, then revise, ask a blocking question, or
      explain why the direction survives.
